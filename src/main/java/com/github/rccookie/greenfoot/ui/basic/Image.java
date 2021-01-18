@@ -2,7 +2,7 @@ package com.github.rccookie.greenfoot.ui.basic;
 
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
-import com.github.rccookie.greenfoot.game.AdvancedActor;
+import com.github.rccookie.greenfoot.core.AdvancedActor;
 import com.github.rccookie.greenfoot.ui.util.Design;
 
 public class Image extends AdvancedActor {

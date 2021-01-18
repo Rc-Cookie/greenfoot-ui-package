@@ -4,10 +4,8 @@ import greenfoot.Color;
 import greenfoot.GreenfootImage;
 import com.github.rccookie.greenfoot.ui.basic.Fade;
 import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.util.UIElement;
 
-@IgnoreOnRaycasts
 public class Fade extends UIElement {
 
     private static final long serialVersionUID = 4672665870995753150L;

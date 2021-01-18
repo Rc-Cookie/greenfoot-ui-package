@@ -7,8 +7,7 @@ import greenfoot.GreenfootImage;
 import greenfoot.MouseInfo;
 import greenfoot.World;
 import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.game.AdvancedActor;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
+import com.github.rccookie.greenfoot.core.AdvancedActor;
 import com.github.rccookie.greenfoot.ui.util.Design;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 
@@ -18,7 +17,6 @@ import com.github.rccookie.greenfoot.ui.util.Interactable;
  * @author RcCookie
  * @version 3.0
  */
-@IgnoreOnRaycasts
 public class TextButton extends Interactable {
 
     private static final long serialVersionUID = -5757911783317668472L;

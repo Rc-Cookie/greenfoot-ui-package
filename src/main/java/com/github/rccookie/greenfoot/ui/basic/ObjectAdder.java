@@ -6,12 +6,10 @@ import greenfoot.World;
 import com.github.rccookie.greenfoot.ui.basic.ObjectAdder;
 import com.github.rccookie.common.util.ClassTag;
 import com.github.rccookie.greenfoot.event.Input;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 
 /**
  * A simple class that takes in an object to add to the world using the mouse.
  */
-@IgnoreOnRaycasts
 public class ObjectAdder extends Actor {
 
     static {

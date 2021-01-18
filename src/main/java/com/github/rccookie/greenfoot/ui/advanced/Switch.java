@@ -7,11 +7,9 @@ import java.util.function.Consumer;
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
 import com.github.rccookie.greenfoot.ui.advanced.Switch;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 
 
-@IgnoreOnRaycasts
 public class Switch extends Interactable {
     private static final long serialVersionUID = -3903122439666473764L;
 

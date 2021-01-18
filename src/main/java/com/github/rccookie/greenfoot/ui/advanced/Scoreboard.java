@@ -4,11 +4,9 @@ import java.util.List;
 
 import greenfoot.Color;
 import greenfoot.UserInfo;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.basic.Text;
 import com.github.rccookie.greenfoot.ui.basic.UIPanel;
 
-@IgnoreOnRaycasts
 public class Scoreboard extends UIPanel {
 
     private static final long serialVersionUID = -5943326128133308351L;
@@ -61,7 +59,6 @@ public class Scoreboard extends UIPanel {
     }
 
 
-    @IgnoreOnRaycasts
     public static class ScorePanel extends UIPanel {
 
         private static final long serialVersionUID = -5992002054787344440L;

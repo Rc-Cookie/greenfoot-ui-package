@@ -7,7 +7,7 @@ import java.util.Set;
 
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
-import com.github.rccookie.greenfoot.game.AdvancedActor;
+import com.github.rccookie.greenfoot.core.AdvancedActor;
 
 public abstract class UIElement extends AdvancedActor {
 

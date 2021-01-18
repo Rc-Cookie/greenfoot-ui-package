@@ -10,7 +10,6 @@ import greenfoot.GreenfootImage;
 import com.github.rccookie.greenfoot.ui.advanced.DropDownMenu;
 import com.github.rccookie.common.util.ClassTag;
 import com.github.rccookie.greenfoot.event.KeyListener;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.basic.Text;
 import com.github.rccookie.greenfoot.ui.basic.TextButton;
 import com.github.rccookie.greenfoot.ui.basic.UIPanel;
@@ -22,7 +21,6 @@ import com.github.rccookie.greenfoot.ui.util.Interactable;
  * @author RcCookie
  * @version 1.0
  */
-@IgnoreOnRaycasts
 public class DropDownMenu extends TextButton {
 
     private static final long serialVersionUID = -3285971397401985009L;

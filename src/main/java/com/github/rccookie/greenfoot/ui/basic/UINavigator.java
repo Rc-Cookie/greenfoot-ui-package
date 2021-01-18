@@ -13,7 +13,7 @@ import com.github.rccookie.greenfoot.event.Input;
 import com.github.rccookie.greenfoot.event.KeyListener;
 import com.github.rccookie.greenfoot.event.MouseListener;
 import com.github.rccookie.greenfoot.event.NavigatonListener;
-import com.github.rccookie.greenfoot.game.AdvancedActor;
+import com.github.rccookie.greenfoot.core.AdvancedActor;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 import com.github.rccookie.greenfoot.ui.util.Theme;
 

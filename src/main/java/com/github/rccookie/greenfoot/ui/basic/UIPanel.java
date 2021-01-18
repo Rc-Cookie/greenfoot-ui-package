@@ -1,7 +1,6 @@
 package com.github.rccookie.greenfoot.ui.basic;
 
 import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.util.UIElement;
 
 import java.util.HashMap;
@@ -11,7 +10,6 @@ import greenfoot.Color;
 import greenfoot.GreenfootImage;
 import greenfoot.World;
 
-@IgnoreOnRaycasts
 public class UIPanel extends UIElement {
 
     private static final long serialVersionUID = 2483357777930844887L;

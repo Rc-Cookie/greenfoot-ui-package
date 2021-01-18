@@ -1,10 +1,8 @@
 package com.github.rccookie.greenfoot.ui.advanced;
 
 import greenfoot.Greenfoot;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.basic.Text;
 
-@IgnoreOnRaycasts
 public class NumberField extends TextField {
 
     private static final long serialVersionUID = -1120896792001559913L;

@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
 import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.util.Design;
 import com.github.rccookie.greenfoot.ui.util.Theme;
 import com.github.rccookie.greenfoot.ui.util.UIElement;
@@ -20,7 +19,6 @@ import com.github.rccookie.greenfoot.ui.util.UIElement;
  * @author RcCookie
  * @version 2.0
  */
-@IgnoreOnRaycasts
 public class Text extends UIElement implements Cloneable {
 
     private static final long serialVersionUID = -7943094443867868226L;

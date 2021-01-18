@@ -4,7 +4,6 @@ import greenfoot.Actor;
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
 import com.github.rccookie.greenfoot.ui.advanced.Camera;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 
 /**
  * The camera can display a specific area of a world. This area's locaiton is fixed to an actor
@@ -15,7 +14,6 @@ import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
  * @author RcCookie
  * @version 1.0
  */
-@IgnoreOnRaycasts
 public class Camera extends Container {
 
     private static final long serialVersionUID = 7931518124100227473L;

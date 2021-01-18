@@ -1,10 +1,8 @@
 package com.github.rccookie.greenfoot.ui.advanced;
 
 import greenfoot.Color;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.basic.Slider;
 
-@IgnoreOnRaycasts
 public class ExponentialSlider extends Slider {
 
     private static final long serialVersionUID = 8159489652228360876L;

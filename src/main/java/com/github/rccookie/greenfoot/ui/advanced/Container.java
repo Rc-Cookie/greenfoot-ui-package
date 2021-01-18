@@ -11,7 +11,6 @@ import greenfoot.GreenfootImage;
 import greenfoot.World;
 import com.github.rccookie.greenfoot.ui.advanced.Container;
 import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.basic.UIPanel;
 
 
@@ -26,7 +25,6 @@ import com.github.rccookie.greenfoot.ui.basic.UIPanel;
  * @author RcCookie
  * @version 1.0
  */
-@IgnoreOnRaycasts
 public class Container extends UIPanel {
 
     private static final long serialVersionUID = 5366805319411124782L;

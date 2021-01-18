@@ -6,12 +6,10 @@ import greenfoot.Color;
 import greenfoot.GreenfootImage;
 import greenfoot.MouseInfo;
 import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 
 /**
  * A class that can be focused and clicked on using keyboard navigation. This can be toggled on or off.
  */
-@IgnoreOnRaycasts
 public abstract class Interactable extends UIElement {
 
     private static final long serialVersionUID = 5483285888871218892L;

@@ -5,11 +5,9 @@ import java.util.Objects;
 import greenfoot.Actor;
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
-import com.github.rccookie.greenfoot.game.AdvancedActor;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
+import com.github.rccookie.greenfoot.core.AdvancedActor;
 import com.github.rccookie.greenfoot.ui.util.Theme;
-
-@IgnoreOnRaycasts 
+ 
 public class Marker extends AdvancedActor {
 
     private static final long serialVersionUID = 1295692069529726795L;

@@ -3,8 +3,6 @@ package com.github.rccookie.greenfoot.ui.advanced;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
-import com.github.rccookie.greenfoot.game.util.ActorTag;
 import com.github.rccookie.greenfoot.ui.basic.Text;
 import com.github.rccookie.greenfoot.ui.basic.TextButton;
 import com.github.rccookie.greenfoot.ui.util.Design;
@@ -20,7 +18,6 @@ import com.github.rccookie.greenfoot.ui.util.Theme;
  * @author RcCookie
  * @version 1.0
  */
-@IgnoreOnRaycasts
 public class FpsDisplay extends TextButton {
 
     private static final long serialVersionUID = -7312819523785019590L;
@@ -53,7 +50,6 @@ public class FpsDisplay extends TextButton {
         setUseBigBorder(false);
         setMaxWidth(Integer.MAX_VALUE);
         setDesign(new Design(getDesign().theme().modified(0, Theme.C_TRANSPARENT), getDesign().textTheme()));
-        ActorTag.tag(this, "ignoreOnClear");
         this.stableMode = stableMode;
         addClickAction(info -> switchMode());
         time.addSecondListener(delta -> {

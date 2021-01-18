@@ -7,7 +7,6 @@ import com.github.rccookie.common.geometry.Edge2D;
 import com.github.rccookie.common.geometry.Vector2D;
 import com.github.rccookie.common.util.ClassTag;
 import com.github.rccookie.greenfoot.event.Input;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 import com.github.rccookie.greenfoot.ui.util.UIElement;
 
@@ -17,7 +16,6 @@ import com.github.rccookie.greenfoot.ui.util.UIElement;
  * @author RcCookie
  * @version 2.0
  */
-@IgnoreOnRaycasts
 public class Slider extends UIElement {
 
     private static final long serialVersionUID = 918128934494787828L;
@@ -163,7 +161,6 @@ public class Slider extends UIElement {
     // Handle class
     // --------------------------------------------
 
-    @IgnoreOnRaycasts
     public class Handle extends IconButton {
 
         private static final long serialVersionUID = 5248272965363967490L;

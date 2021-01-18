@@ -2,11 +2,9 @@ package com.github.rccookie.greenfoot.ui.advanced;
 
 import greenfoot.Color;
 import greenfoot.Greenfoot;
-import com.github.rccookie.greenfoot.game.raycast.Raycast.IgnoreOnRaycasts;
 import com.github.rccookie.greenfoot.ui.basic.Text;
 import com.github.rccookie.greenfoot.ui.basic.TextButton;
 
-@IgnoreOnRaycasts
 public class TextField extends TextButton {
     private static final long serialVersionUID = -874972441824558399L;
 
