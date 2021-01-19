@@ -155,10 +155,7 @@ public class UIPanel extends UIElement {
     }
 
     @Override
-    protected void assignDefaultColorMappings() {
-        // TODO Auto-generated method stub
-
-    }
+    protected void assignDefaultColorMappings() { }
 
     @Override
     protected void regenerateImages() {
