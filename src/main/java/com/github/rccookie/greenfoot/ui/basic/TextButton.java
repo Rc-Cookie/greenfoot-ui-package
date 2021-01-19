@@ -4,10 +4,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import greenfoot.GreenfootImage;
-import greenfoot.MouseInfo;
 import greenfoot.World;
 import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.core.AdvancedActor;
 import com.github.rccookie.greenfoot.ui.util.Design;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 
@@ -18,8 +16,6 @@ import com.github.rccookie.greenfoot.ui.util.Interactable;
  * @version 3.0
  */
 public class TextButton extends Interactable {
-
-    private static final long serialVersionUID = -5757911783317668472L;
 
     protected static final int BORDER_X = 5, BORDER_Y = 1;
     protected static final float HEIGHT_WIDTH_FACTOR = 3.5f;
@@ -92,7 +88,7 @@ public class TextButton extends Interactable {
      * Used to automatically update the appearance of the button when
      * the text is changed.
      */
-    private final Consumer<Object> textUpdateAction = info -> imageChanged();
+    private final Runnable textUpdateAction = () -> imageChanged();
 
 
 
@@ -442,12 +438,12 @@ public class TextButton extends Interactable {
      * Adds an action that will be executed whenever the button was clicked.
      * <p><b>Example:<b>
      * <p>{@code Button b = new Button("Hello World!");}
-     * <p>{@code b.addClickAction(info -> System.out.println("Hello!"));}
+     * <p>{@code b.addClickAction(() -> System.out.println("Hello!"));}
      * 
      * @param mouse The action to add
      */
     @Override
-    public TextButton addClickAction(Consumer<MouseInfo> mouse) {
+    public TextButton addClickAction(Runnable mouse) {
         return (TextButton)super.addClickAction(mouse);
     }
 
@@ -457,17 +453,17 @@ public class TextButton extends Interactable {
      * 
      * @param action The action to remove
      */
-    public TextButton removeClickAction(Consumer<MouseInfo> action) {
+    public TextButton removeClickAction(Runnable action) {
         return (TextButton)super.removeClickAction(action);
     }
 
     @Override
-    public TextButton addPressAction(Consumer<MouseInfo> mouse) {
+    public TextButton addPressAction(Runnable mouse) {
         return (TextButton)super.addPressAction(mouse);
     }
 
     @Override
-    public TextButton addReleaseAction(Consumer<MouseInfo> mouse) {
+    public TextButton addReleaseAction(Runnable mouse) {
         return (TextButton)super.addReleaseAction(mouse);
     }
 
@@ -477,16 +473,16 @@ public class TextButton extends Interactable {
     }
 
     @Override
-    public TextButton removePressAction(Consumer<MouseInfo> action) {
+    public TextButton removePressAction(Runnable action) {
         return (TextButton)super.removePressAction(action);
     }
 
     @Override
-    public TextButton removeReleaseAction(Consumer<MouseInfo> action) {
+    public TextButton removeReleaseAction(Runnable action) {
         return (TextButton)super.removeReleaseAction(action);
     }
     @Override
-    public AdvancedActor removeAddedAction(Consumer<World> action) {
+    public TextButton removeAddedAction(Consumer<World> action) {
         return (TextButton)super.removeAddedAction(action);
     }
 }

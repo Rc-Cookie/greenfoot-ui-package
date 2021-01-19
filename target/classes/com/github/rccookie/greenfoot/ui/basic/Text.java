@@ -3,7 +3,6 @@ package com.github.rccookie.greenfoot.ui.basic;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
@@ -20,8 +19,6 @@ import com.github.rccookie.greenfoot.ui.util.UIElement;
  * @version 2.0
  */
 public class Text extends UIElement implements Cloneable {
-
-    private static final long serialVersionUID = -7943094443867868226L;
 
     protected static final int DEFAULT_FONT_SIZE = 20;
     protected static final String DEFAULT_CONTENT = "";
@@ -43,7 +40,7 @@ public class Text extends UIElement implements Cloneable {
     private int fontSize = DEFAULT_FONT_SIZE;
 
 
-    private final List<Consumer<Object>> updateActions = new ArrayList<>();
+    private final List<Runnable> updateActions = new ArrayList<>();
 
 
     /**
@@ -154,7 +151,7 @@ public class Text extends UIElement implements Cloneable {
             elementColor("text"),
             Theme.C_TRANSPARENT));
 
-        for (Consumer<Object> action : updateActions) action.accept(null);
+        for (Runnable action : updateActions) action.run();
     }
 
 
@@ -231,9 +228,9 @@ public class Text extends UIElement implements Cloneable {
      * 
      * @param nothing The action to add
      */
-    public Text addUpdateAction(Consumer<Object> nothing) {
-        if(nothing == null) return this;
-        updateActions.add(nothing);
+    public Text addUpdateAction(Runnable action) {
+        if(action == null) return this;
+        updateActions.add(action);
         return this;
     }
 
@@ -243,7 +240,7 @@ public class Text extends UIElement implements Cloneable {
      * 
      * @param action The action to remove
      */
-    public void removeUpdateAction(Consumer<Object> action) {
+    public void removeUpdateAction(Runnable action) {
         updateActions.remove(action);
     }
 

@@ -8,8 +8,6 @@ import com.github.rccookie.greenfoot.ui.util.Interactable;
  */
 public class IconButton extends Interactable {
 
-    private static final long serialVersionUID = -7601612940355287878L;
-
     private GreenfootImage icon;
 
     public IconButton(GreenfootImage icon) {

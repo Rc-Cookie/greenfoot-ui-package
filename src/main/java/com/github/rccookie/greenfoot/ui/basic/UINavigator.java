@@ -13,13 +13,11 @@ import com.github.rccookie.greenfoot.event.Input;
 import com.github.rccookie.greenfoot.event.KeyListener;
 import com.github.rccookie.greenfoot.event.MouseListener;
 import com.github.rccookie.greenfoot.event.NavigatonListener;
-import com.github.rccookie.greenfoot.core.AdvancedActor;
+import com.github.rccookie.greenfoot.core.CoreActor;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 import com.github.rccookie.greenfoot.ui.util.Theme;
 
-public class UINavigator extends AdvancedActor {
-
-    private static final long serialVersionUID = -7587640445406133398L;
+public class UINavigator extends CoreActor {
 
     public static final int BORDER = 3;
 

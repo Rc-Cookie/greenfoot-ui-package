@@ -6,7 +6,6 @@ import com.github.rccookie.greenfoot.ui.basic.Text;
 import com.github.rccookie.greenfoot.ui.basic.TextButton;
 
 public class TextField extends TextButton {
-    private static final long serialVersionUID = -874972441824558399L;
 
     public static final int BORDER = 1;
     public static final int GAP_BEFORE_TEXT = 2;
@@ -30,7 +29,7 @@ public class TextField extends TextButton {
     }
 
     protected void setupAction(String question) {
-        addClickAction(info -> getText().setContent(Greenfoot.ask(question)));
+        addClickAction(() -> getText().setContent(Greenfoot.ask(question)));
     }
 
 

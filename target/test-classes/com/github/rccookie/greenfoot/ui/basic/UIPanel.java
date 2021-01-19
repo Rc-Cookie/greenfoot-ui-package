@@ -12,8 +12,6 @@ import greenfoot.World;
 
 public class UIPanel extends UIElement {
 
-    private static final long serialVersionUID = 2483357777930844887L;
-
     static {
         ClassTag.tag(UIPanel.class, "ui");
     }
@@ -49,7 +47,6 @@ public class UIPanel extends UIElement {
     public UIPanel(int x, int y, GreenfootImage image){
         this.x = x;
         this.y = y;
-        setCollider(null);
         elements = new HashMap<Actor, RelativeLocation>();
         setImage(image);
         coversWorld = false;

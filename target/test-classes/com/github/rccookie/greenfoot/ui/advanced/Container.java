@@ -27,8 +27,6 @@ import com.github.rccookie.greenfoot.ui.basic.UIPanel;
  */
 public class Container extends UIPanel {
 
-    private static final long serialVersionUID = 5366805319411124782L;
-
     static {
         ClassTag.tag(Container.class, "ui");
     }

@@ -16,8 +16,6 @@ import com.github.rccookie.greenfoot.ui.advanced.Camera;
  */
 public class Camera extends Container {
 
-    private static final long serialVersionUID = 7931518124100227473L;
-
     /**
      * The default background color. This color is shown anywhere where displayed
      * world ends.

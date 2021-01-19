@@ -1,12 +1,10 @@
 package com.github.rccookie.greenfoot.ui.basic;
 
-import com.github.rccookie.common.event.Time;
 import com.github.rccookie.common.util.ClassTag;
 import com.github.rccookie.greenfoot.ui.util.ColorMapping;
 import com.github.rccookie.greenfoot.ui.util.Design;
 import com.github.rccookie.greenfoot.ui.util.Theme;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -14,13 +12,12 @@ import java.util.Objects;
 import greenfoot.Actor;
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
-import greenfoot.World;
+
+import com.github.rccookie.greenfoot.core.CoreWorld;
 import com.github.rccookie.greenfoot.ui.advanced.DropDownMenu;
 import com.github.rccookie.greenfoot.ui.advanced.FpsDisplay;
 
-public abstract class UIWorld extends World implements Serializable {
-
-    private static final long serialVersionUID = 6103735650468166075L;
+public abstract class UIWorld extends CoreWorld {
 
     static {
         ClassTag.tag(UIWorld.class, "ui");
@@ -43,9 +40,6 @@ public abstract class UIWorld extends World implements Serializable {
 
 
 
-
-    private HashMap<Actor, RelativeLocation> elements;
-    private final Time time;
     private UINavigator buttonNavi;
     private Design design = Design.getDefaultDesign();
 
@@ -69,50 +63,13 @@ public abstract class UIWorld extends World implements Serializable {
 
     public UIWorld(int x, int y, int cellSize, boolean bounded){
         super(x, y, cellSize, bounded);
-        elements = new HashMap<Actor, RelativeLocation>();
         assignDefaultColorMappings();
 
         colorBackground(Color.WHITE);
-        time = new Time();
 
         setPaintOrder();
     }
 
-
-
-    @Override
-    public final void act() {
-        internalUpdate();
-        update();
-    }
-
-    private void internalUpdate() {
-        time.update();
-    }
-
-    protected void physicsUpdate() { };
-    public void update() { }
-
-
-    
-    public void add(Actor element, double x, double y){
-        add(element, x, y, 0, 0);
-    }
-    
-    public void add(Actor element, double x, double y, double offX, double offY){
-        if(element == null) return;
-        RelativeLocation loc = new RelativeLocation(x, y, offX, offY);
-        elements.put(element, loc);
-        addElement(element, loc);
-    }
-
-    private void addElement(Actor element, RelativeLocation loc) {
-        addObject(
-            element,
-            (int)(getWidth() * loc.relative.x() + loc.offset.x()),
-            (int)(getHeight() * loc.relative.y() + loc.offset.y())
-        );
-    }
 
 
     @Override
@@ -179,22 +136,12 @@ public abstract class UIWorld extends World implements Serializable {
     }
 
     public void addFps(){
-        if(getObjects(FpsDisplay.class).size() == 0) add(new FpsDisplay(), 0, 0, 42, 13);
-    }
-
-    public void moveTo(Actor element, double x, double y){
-        if(element != null && elements.keySet().contains(element)){
-            add(element, x, y);
-        }
+        if(getObjects(FpsDisplay.class).size() == 0) addObject(new FpsDisplay(), 42, 13);
     }
 
     public void colorBackground(Color color) {
         getBackground().setColor(color);
         getBackground().fill();
-    }
-
-    public Time time(){
-        return time;
     }
 
     public UINavigator uiNavi() {

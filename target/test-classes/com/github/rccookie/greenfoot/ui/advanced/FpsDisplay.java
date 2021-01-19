@@ -20,8 +20,6 @@ import com.github.rccookie.greenfoot.ui.util.Theme;
  */
 public class FpsDisplay extends TextButton {
 
-    private static final long serialVersionUID = -7312819523785019590L;
-
     private static final int STATISTICS_SIZE_MAX = 100;
 
     /**
@@ -51,7 +49,7 @@ public class FpsDisplay extends TextButton {
         setMaxWidth(Integer.MAX_VALUE);
         setDesign(new Design(getDesign().theme().modified(0, Theme.C_TRANSPARENT), getDesign().textTheme()));
         this.stableMode = stableMode;
-        addClickAction(info -> switchMode());
+        addClickAction(() -> switchMode());
         time.addSecondListener(delta -> {
             getText().setContent("FPS: " + currentModeFps());
             statistics.add(stableFps());

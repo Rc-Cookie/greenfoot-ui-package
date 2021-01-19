@@ -18,8 +18,6 @@ import com.github.rccookie.greenfoot.ui.util.UIElement;
  */
 public class Slider extends UIElement {
 
-    private static final long serialVersionUID = 918128934494787828L;
-
     static {
         ClassTag.tag(Slider.class, "ui");
     }
@@ -52,7 +50,7 @@ public class Slider extends UIElement {
         Vector2D slideVector = Vector2D.angledVector(0, length);
         edge = new Edge2D(getLocation().subtract(slideVector.scaled(0.5)), slideVector);
 
-        addPressAction(mouse -> {
+        addPressAction(() -> {
             setLocation(edge.get(getPercentage(Input.mouseState().getLocation())));
             setValue(handle.value);
         });
@@ -163,8 +161,6 @@ public class Slider extends UIElement {
 
     public class Handle extends IconButton {
 
-        private static final long serialVersionUID = 5248272965363967490L;
-
         public static final int SIZE = 14;
 
         Vector2D offset;
@@ -172,8 +168,8 @@ public class Slider extends UIElement {
 
         public Handle() {
             super(generateHandleImage());
-            addPressAction(info -> updateOffset());
-            addReleaseAction(info -> offset = null);
+            addPressAction(() -> updateOffset());
+            addReleaseAction(() -> offset = null);
             addAddedAction(world -> value = getValue());
         }
 

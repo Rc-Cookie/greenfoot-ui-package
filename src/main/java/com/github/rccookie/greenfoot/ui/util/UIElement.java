@@ -7,12 +7,9 @@ import java.util.Set;
 
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
-import com.github.rccookie.greenfoot.core.AdvancedActor;
+import com.github.rccookie.greenfoot.core.CoreActor;
 
-public abstract class UIElement extends AdvancedActor {
-
-    private static final long serialVersionUID = 9088818140513138429L;
-
+public abstract class UIElement extends CoreActor {
 
     /**
      * The design used by this ui element.

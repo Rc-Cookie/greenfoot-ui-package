@@ -2,12 +2,10 @@ package com.github.rccookie.greenfoot.ui.basic;
 
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
-import com.github.rccookie.greenfoot.core.AdvancedActor;
+import com.github.rccookie.greenfoot.core.CoreActor;
 import com.github.rccookie.greenfoot.ui.util.Design;
 
-public class Image extends AdvancedActor {
-
-    private static final long serialVersionUID = -5125968660942830686L;
+public class Image extends CoreActor {
 
     private static final GreenfootImage NOT_FOUND_IMAGE(String filePath) {
         return new Text("Image \"" + filePath + "\" could not be found", Design.ERROR).getImage();

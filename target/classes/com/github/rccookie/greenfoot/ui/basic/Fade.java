@@ -8,8 +8,6 @@ import com.github.rccookie.greenfoot.ui.util.UIElement;
 
 public class Fade extends UIElement {
 
-    private static final long serialVersionUID = 4672665870995753150L;
-
     static {
         ClassTag.tag(Fade.class, "ui");
     }

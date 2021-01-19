@@ -11,7 +11,6 @@ import com.github.rccookie.greenfoot.ui.util.Interactable;
 
 
 public class Switch extends Interactable {
-    private static final long serialVersionUID = -3903122439666473764L;
 
     private final int size;
 
@@ -25,7 +24,7 @@ public class Switch extends Interactable {
 
     public Switch(int size) {
         this.size = size;
-        addClickAction(info -> switchState());
+        addClickAction(() -> switchState());
     }
 
 

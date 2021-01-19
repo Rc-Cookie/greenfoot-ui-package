@@ -5,8 +5,6 @@ import com.github.rccookie.greenfoot.ui.basic.Text;
 
 public class NumberField extends TextField {
 
-    private static final long serialVersionUID = -1120896792001559913L;
-
     public static final double DEFAULT_RETURN = 0;
 
     public boolean useDoubles = true;
@@ -31,7 +29,7 @@ public class NumberField extends TextField {
 
     @Override
     protected void setupAction(String question) {
-        addClickAction(info -> setContent(question));
+        addClickAction(() -> setContent(question));
     }
 
     private void setContent(String question) {

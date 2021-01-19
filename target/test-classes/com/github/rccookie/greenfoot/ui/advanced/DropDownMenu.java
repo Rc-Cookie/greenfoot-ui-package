@@ -23,8 +23,6 @@ import com.github.rccookie.greenfoot.ui.util.Interactable;
  */
 public class DropDownMenu extends TextButton {
 
-    private static final long serialVersionUID = -3285971397401985009L;
-
     static {
         ClassTag.tag(Backpanel.class, "ui");
     }
@@ -83,7 +81,7 @@ public class DropDownMenu extends TextButton {
 
         backpanel = addSubElement(new Backpanel());
 
-        addClickAction(m -> openMenu());
+        addClickAction(() -> openMenu());
     }
 
 
@@ -148,15 +146,13 @@ public class DropDownMenu extends TextButton {
 
     public class Backpanel extends UIPanel {
 
-        private static final long serialVersionUID = 9118528858781959009L;
-
         private Backpanel() {
             super(
                 menuButtons[0].getImage().getWidth() + 2 * SIDE_BORDER,
                 menuButtons.length * DropDownMenu.this.getImage().getHeight() + 2 * TOP_BOTTOM_BORDER
             );
 
-            addClickAction(m -> closeMenu(title.getContent()));
+            addClickAction(() -> closeMenu(title.getContent()));
         }
 
         @Override
@@ -181,13 +177,11 @@ public class DropDownMenu extends TextButton {
 
     public class MenuButton extends TextButton {
 
-        private static final long serialVersionUID = -3274515847700125865L;
-
         private KeyListener escListener = new KeyListener("escape");
 
         private MenuButton(String name) {
             super(title.clone().setContent(name));
-            addClickAction(m -> closeMenu(getTitle()));
+            addClickAction(() -> closeMenu(getTitle()));
             escListener.addListener(k -> closeMenu(title.getContent()));
             addAddedAction(world -> {
                 if(getTitle().equals(getSelection())) mapColor("background", 2, false);

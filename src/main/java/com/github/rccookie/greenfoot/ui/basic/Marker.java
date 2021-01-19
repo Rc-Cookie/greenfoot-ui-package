@@ -5,12 +5,10 @@ import java.util.Objects;
 import greenfoot.Actor;
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
-import com.github.rccookie.greenfoot.core.AdvancedActor;
+import com.github.rccookie.greenfoot.core.CoreActor;
 import com.github.rccookie.greenfoot.ui.util.Theme;
  
-public class Marker extends AdvancedActor {
-
-    private static final long serialVersionUID = 1295692069529726795L;
+public class Marker extends CoreActor {
 
     private static final int BORDER = 2;
 

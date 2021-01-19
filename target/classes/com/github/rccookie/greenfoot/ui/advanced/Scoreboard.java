@@ -8,8 +8,6 @@ import com.github.rccookie.greenfoot.ui.basic.Text;
 import com.github.rccookie.greenfoot.ui.basic.UIPanel;
 
 public class Scoreboard extends UIPanel {
-
-    private static final long serialVersionUID = -5943326128133308351L;
     public static final int MIN_WIDTH = 200, MIN_HEIGHT = (int) (ScorePanel.HEIGHT * 2.5);
 
     @SuppressWarnings("unchecked")
@@ -60,8 +58,6 @@ public class Scoreboard extends UIPanel {
 
 
     public static class ScorePanel extends UIPanel {
-
-        private static final long serialVersionUID = -5992002054787344440L;
 
         public static int SCORE_PRECITION = 1;
 

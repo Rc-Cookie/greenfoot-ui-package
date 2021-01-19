@@ -4,15 +4,12 @@ import java.util.List;
 
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
-import greenfoot.MouseInfo;
 import com.github.rccookie.common.util.ClassTag;
 
 /**
  * A class that can be focused and clicked on using keyboard navigation. This can be toggled on or off.
  */
 public abstract class Interactable extends UIElement {
-
-    private static final long serialVersionUID = 5483285888871218892L;
     
     static {
         ClassTag.tag(Interactable.class, "ui");
@@ -70,13 +67,13 @@ public abstract class Interactable extends UIElement {
     }
 
     @Override
-    protected void onPress(MouseInfo mouse) {
-        if(isEnabled()) super.onPress(mouse);
+    protected void onPress() {
+        if(isEnabled()) super.onPress();
     }
 
     @Override
-    protected void onRelease(MouseInfo mouse) {
-        if(isEnabled()) super.onRelease(mouse);
+    protected void onRelease() {
+        if(isEnabled()) super.onRelease();
     }
 
 

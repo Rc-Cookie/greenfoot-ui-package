@@ -4,8 +4,6 @@ import greenfoot.Color;
 import com.github.rccookie.greenfoot.ui.basic.Slider;
 
 public class ExponentialSlider extends Slider {
-
-    private static final long serialVersionUID = 8159489652228360876L;
     
     private final int exponent;
 
