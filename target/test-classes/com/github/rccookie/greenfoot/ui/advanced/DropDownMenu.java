@@ -182,7 +182,7 @@ public class DropDownMenu extends TextButton {
         private MenuButton(String name) {
             super(title.clone().setContent(name));
             addClickAction(() -> closeMenu(getTitle()));
-            escListener.addListener(k -> closeMenu(title.getContent()));
+            escListener.addListener(() -> closeMenu(title.getContent()));
             addAddedAction(world -> {
                 if(getTitle().equals(getSelection())) mapColor("background", 2, false);
                 else mapColor("background", 0, false);

@@ -58,16 +58,16 @@ public class UINavigator extends CoreActor {
         });
 
         spaceListener = new KeyListener("space");
-        spaceListener.addListener(k -> focused.click());
+        spaceListener.addListener(() -> focused.click());
 
         tabListener = new KeyListener("tab");
-        tabListener.addListener(key -> {
+        tabListener.addListener(() -> {
             focused = Input.keyState("shift") ? getLast() : getNext();
             updateImage();
         });
 
         escListener = new KeyListener("escape");
-        escListener.addListener(key -> focus(null));
+        escListener.addListener(() -> focus(null));
 
         mouseListener = new MouseListener();
         mouseListener.addListener(m -> focus(null));
