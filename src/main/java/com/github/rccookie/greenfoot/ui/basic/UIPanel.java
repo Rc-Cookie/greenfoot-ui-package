@@ -1,6 +1,7 @@
 package com.github.rccookie.greenfoot.ui.basic;
 
 import com.github.rccookie.common.util.ClassTag;
+import com.github.rccookie.greenfoot.core.CoreActor;
 import com.github.rccookie.greenfoot.ui.util.UIElement;
 
 import java.util.HashMap;
@@ -135,13 +136,13 @@ public class UIPanel extends UIElement {
     /**
      * Removes this ui panel and all its subcomponents from its world.
      */
-    public void remove() {
-        if(getWorld() == null) return;
+    public boolean remove() {
+        if(getWorld() == null) return false;
         for(Actor element : elements.keySet()) {
-            if(element instanceof Slider) ((Slider)element).remove();
+            if(element instanceof CoreActor) ((CoreActor)element).remove();
             else getWorld().removeObject(element);
         }
-        getWorld().removeObject(this);
+        return super.remove();
     }
 
 

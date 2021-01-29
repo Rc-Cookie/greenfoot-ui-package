@@ -145,10 +145,10 @@ public class Slider extends UIElement {
         setImage(image);
     }
 
-    public void remove() {
-        if(getWorld() == null) return;
-        getWorld().removeObject(handle);
-        getWorld().removeObject(this);
+    public boolean remove() {
+        if(getWorld() == null) return false;
+        handle.remove();
+        return super.remove();
     }
     
 

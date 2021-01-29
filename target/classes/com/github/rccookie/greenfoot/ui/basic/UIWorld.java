@@ -57,6 +57,10 @@ public abstract class UIWorld extends CoreWorld {
     @SuppressWarnings("rawtypes")
     private Class[] customPaintOrder;
 
+    public UIWorld(int width, int height) {
+        this(width, height, 1);
+    }
+
     public UIWorld(int x, int y, int cellSize){
         this(x, y, cellSize, false);
     }
