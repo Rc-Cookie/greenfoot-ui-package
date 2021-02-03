@@ -131,7 +131,7 @@ public class TextButton extends Interactable {
         // 1.: Calculate planned size based on font size and bigBorder configuration
 
         int plannedHeight = text.getImage().getHeight();
-        if(useBigBorder) plannedHeight += text.getFontSize() / 2;
+        if(useBigBorder) plannedHeight += text.getFont().getSize() / 2;
 
         int plannedWidth = (int)(plannedHeight * HEIGHT_WIDTH_FACTOR) + 2 * BORDER_X;
 

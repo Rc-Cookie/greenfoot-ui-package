@@ -7,6 +7,8 @@ import java.util.Objects;
 import greenfoot.Color;
 import greenfoot.GreenfootImage;
 import com.github.rccookie.common.util.ClassTag;
+import com.github.rccookie.greenfoot.core.FontStyle;
+import com.github.rccookie.greenfoot.core.Image;
 import com.github.rccookie.greenfoot.ui.util.Design;
 import com.github.rccookie.greenfoot.ui.util.Theme;
 import com.github.rccookie.greenfoot.ui.util.UIElement;
@@ -21,6 +23,7 @@ import com.github.rccookie.greenfoot.ui.util.UIElement;
 public class Text extends UIElement implements Cloneable {
 
     protected static final int DEFAULT_FONT_SIZE = 20;
+    protected static final FontStyle DEFAULT_FONT = FontStyle.modern(DEFAULT_FONT_SIZE);
     protected static final String DEFAULT_CONTENT = "";
     protected static final Design DEFAULT_DESIGN = Design.getDefaultDesign();
 
@@ -35,9 +38,9 @@ public class Text extends UIElement implements Cloneable {
     private String content = DEFAULT_CONTENT;
 
     /**
-     * The fontSize of the dext drawn.
+     * The font of the dext drawn.
      */
-    private int fontSize = DEFAULT_FONT_SIZE;
+    private FontStyle font = DEFAULT_FONT;
 
 
     private final List<Runnable> updateActions = new ArrayList<>();
@@ -113,9 +116,9 @@ public class Text extends UIElement implements Cloneable {
      * @param fontSize The font size of the text
      * @param design The design of the text
      */
-    public Text(String content, int fontSize, Design design) {
+    public Text(String content, FontStyle font, Design design) {
         this.content = content;
-        this.fontSize = fontSize;
+        this.font = font;
         setDesign(design);
     }
 
@@ -126,7 +129,7 @@ public class Text extends UIElement implements Cloneable {
      * @param copy The text to create a copy of
      */
     public Text(Text copy) {
-        this(copy.getContent(), copy.getFontSize(), copy.getDesign());
+        this(copy.getContent(), copy.getFont(), copy.getDesign());
     }
 
 
@@ -145,11 +148,7 @@ public class Text extends UIElement implements Cloneable {
         if(content == null || content.equals("")) {
             setImage(new GreenfootImage(1, 1));
         }
-        else setImage(new GreenfootImage(
-            content,
-            fontSize,
-            elementColor("text"),
-            Theme.C_TRANSPARENT));
+        else setImage(Image.text(content, elementColor("text"), font));
 
         for (Runnable action : updateActions) action.run();
     }
@@ -167,15 +166,25 @@ public class Text extends UIElement implements Cloneable {
     }
 
     /**
+     * Sets the font of this text.
+     * 
+     * @param font The new font
+     * @return This text
+     */
+    public Text setFont(FontStyle font) {
+        this.font = font;
+        regenerateImages();
+        return this;
+    }
+
+    /**
      * Sets the font size of the text (also of the already written stuff) to
      * the given one.
      * 
      * @param fontSize The new font size
      */
     public Text setFontSize(int fontSize) {
-        this.fontSize = fontSize;
-        regenerateImages();
-        return this;
+        return setFont(font.deriveFont(fontSize));
     }
 
     @Override
@@ -217,9 +226,10 @@ public class Text extends UIElement implements Cloneable {
      * 
      * @return The font size of the text
      */
-    public int getFontSize() {
-        return fontSize;
+    public FontStyle getFont() {
+        return font;
     }
+
 
 
     /**
