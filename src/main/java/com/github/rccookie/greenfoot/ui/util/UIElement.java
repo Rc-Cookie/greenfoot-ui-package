@@ -5,11 +5,12 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.github.rccookie.util.Console;
 import com.github.rccookie.greenfoot.core.Color;
 import com.github.rccookie.greenfoot.core.Image;
-import com.github.rccookie.greenfoot.core.CoreActor;
+import com.github.rccookie.greenfoot.core.GameObject;
 
-public abstract class UIElement extends CoreActor {
+public abstract class UIElement extends GameObject {
 
     /**
      * The design used by this ui element.
@@ -31,6 +32,13 @@ public abstract class UIElement extends CoreActor {
      * should be repainted.
      */
     private boolean imageChanged = true;
+
+    /**
+     * Flag indicating weather the {@link #imageChanged} state is locked and cannot be modified
+     * using {@link #imageChanged()}. This is the case during image regeneration so that it
+     * cannot result in an endless repainting loop.
+     */
+    private boolean changeLock = false;
 
 
 
@@ -189,10 +197,10 @@ public abstract class UIElement extends CoreActor {
      * @param subElement The ui element to add
      * @return The inserted element
      */
-    protected <E extends UIElement> E addSubElement(E subElement) {
+    public <E extends UIElement> E addSubElement(E subElement) {
         if(subElement == null) return subElement;
         if(subElement.subElements.contains(this)) throw new IllegalStateException("Trying to make two ui elements subelements of each other");
-        subElements.add(subElement);
+        if(subElements.add(subElement) && imageChanged) subElement.imageChanged(); // If the image of this element was changed inform the new subelement
         return subElement;
     }
 
@@ -202,7 +210,7 @@ public abstract class UIElement extends CoreActor {
      * @param subElement The ui element to remove
      * @return Weather the given element was a subelement of this element
      */
-    protected boolean removeSubElement(UIElement subElement) {
+    public boolean removeSubElement(UIElement subElement) {
         if(subElement == null) return false;
         return subElements.remove(subElement);
     }
@@ -239,6 +247,10 @@ public abstract class UIElement extends CoreActor {
      * the design, a different text title or a resizing.
      */
     protected void imageChanged() {
+        if(changeLock) {
+            Console.debug("{} tried to invoke imageChanged while locked", this);
+            return;
+        }
         imageChanged = true;
         for(UIElement element : subElements) element.imageChanged();
     }
@@ -247,9 +259,27 @@ public abstract class UIElement extends CoreActor {
     public Image getImage() {
         if(imageChanged) {
             imageChanged = false;
-            regenerateImages();
-            imageChanged = false; // Some regeneration algorithm may reactivate this
+            runLocked(() -> {
+                Console.debug("Drawing {}", this);
+                regenerateImages();
+                Console.debug("Done drawing {}", this);
+            });
         }
         return super.getImage();
+    }
+
+    /**
+     * Runs the given task while the image changed state is locked and cannot be changed
+     * using {@link #imageChanged()}.
+     * 
+     * @param task The task to run in a locked state
+     */
+    public void runLocked(Runnable task) {
+        // To prevent early unlock when running multiple of these inside of each other
+        boolean initialLockState = changeLock;
+
+        changeLock = true;
+        task.run();
+        changeLock = initialLockState;
     }
 }

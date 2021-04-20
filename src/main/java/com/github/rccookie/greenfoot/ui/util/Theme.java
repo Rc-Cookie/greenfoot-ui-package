@@ -25,11 +25,6 @@ public class Theme implements Cloneable, Serializable {
     public static final Theme DEBUG_TEXT = new Theme(Color.RED, Color.YELLOW);
     public static final Theme ERROR_TEXT = new Theme(Color.BLACK, Color.RED);
 
-    /**
-     * A fully transparent color. When not transparent this has the color black.
-     */
-    public static final Color C_TRANSPARENT = new Color(0, 0, 0, 0);
-
 
 
 

@@ -3,9 +3,8 @@ package com.github.rccookie.greenfoot.ui;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import greenfoot.GreenfootImage;
-import greenfoot.World;
-
+import com.github.rccookie.greenfoot.core.Image;
+import com.github.rccookie.greenfoot.core.Map;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 
 /**
@@ -77,18 +76,6 @@ public class TextButton extends Interactable {
 
 
 
-
-    /**
-     * Used to automatically update the appearance of the button when
-     * the text is changed.
-     */
-    private final Runnable textUpdateAction = () -> imageChanged();
-
-
-
-
-
-
     //--------------------------------------------------
     // Constructors
     //--------------------------------------------------
@@ -117,7 +104,7 @@ public class TextButton extends Interactable {
      * the latest settings and aplies the matching image to the button.
      */
     @Override
-    protected GreenfootImage createMainImage() {
+    protected Image createMainImage() {
 
         if(text == null || getDesign() == null) return null;
 
@@ -162,7 +149,7 @@ public class TextButton extends Interactable {
 
         // 3.: Create actual image instance
 
-        GreenfootImage image = new GreenfootImage(width, height);
+        Image image = new Image(width, height);
 
 
         // 4.: Fill background with theme main color
@@ -297,9 +284,8 @@ public class TextButton extends Interactable {
      * @param title The new title
      * @return This button
      */
-    public TextButton setTitle(String title){
+    public TextButton setTitle(String title) {
         text.setTitle(title);
-        imageChanged();
         return this;
     }
 
@@ -312,12 +298,16 @@ public class TextButton extends Interactable {
     public TextButton setText(Text text) {
         Objects.requireNonNull(text, "The text must not be null");
         if(this.text == text) return this;
-        removeSubElement(this.text);
-        addSubElement(text);
-        if(this.text != null) this.text.removeUpdateAction(textUpdateAction);
-        text.addUpdateAction(textUpdateAction);
-        this.text = text;
-        imageChanged();
+
+        Runnable task = () -> {
+            if(this.text != null) this.text.removeSubElement(this); // Is null before first assignment (from ctor)
+            if(text != null) text.addSubElement(this);
+            this.text = text;
+        };
+
+        if(Objects.equals(this.text, text)) runLocked(task); // No graphical change, so don't invoke imageChanged
+        else task.run();
+        
         return this;
     }
 
@@ -431,15 +421,16 @@ public class TextButton extends Interactable {
     /**
      * Adds an action that will be executed whenever the button was clicked.
      * <p><b>Example:<b>
-     * <p>{@code Button b = new Button("Hello World!");}
+     * <p>{@code Button b = new Button("Hello Map!");}
      * <p>{@code b.addClickAction(() -> System.out.println("Hello!"));}
      * 
      * @param mouse The action to add
      */
     @Override
-    public TextButton addClickAction(Runnable mouse) {
-        return (TextButton)super.addClickAction(mouse);
+    public TextButton addOnClick(Runnable mouse) {
+        return (TextButton)super.addOnClick(mouse);
     }
+
 
 
     /**
@@ -462,8 +453,8 @@ public class TextButton extends Interactable {
     }
 
     @Override
-    public TextButton addAddedAction(Consumer<World> world) {
-        return (TextButton)super.addAddedAction(world);
+    public TextButton addOnAdd(Consumer<Map> map) {
+        return (TextButton)super.addOnAdd(map);
     }
 
     @Override
@@ -476,7 +467,7 @@ public class TextButton extends Interactable {
         return (TextButton)super.removeReleaseAction(action);
     }
     @Override
-    public TextButton removeAddedAction(Consumer<World> action) {
+    public TextButton removeAddedAction(Consumer<Map> action) {
         return (TextButton)super.removeAddedAction(action);
     }
 }

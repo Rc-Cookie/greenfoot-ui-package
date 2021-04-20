@@ -3,7 +3,8 @@ package com.github.rccookie.greenfoot.ui.util;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.github.rccookie.greenfoot.ui.UIWorld;
+import com.github.rccookie.greenfoot.core.Core;
+import com.github.rccookie.greenfoot.ui.UIMap;
 
 public class Design implements Cloneable, Serializable {
 
@@ -108,7 +109,7 @@ public class Design implements Cloneable, Serializable {
                 for(UIElement element : greenfoot.core.WorldHandler.getInstance().getWorld().getObjects(UIElement.class)) {
                     element.imageChanged();
                 }
-                ((UIWorld)greenfoot.core.WorldHandler.getInstance().getWorld()).backgroundChanged();
+                ((UIMap)Core.getMap()).backgroundChanged();
             } catch(Exception e) { }
         }
     }

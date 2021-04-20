@@ -1,6 +1,6 @@
 package com.github.rccookie.greenfoot.ui;
 
-import greenfoot.Color;
+import com.github.rccookie.greenfoot.core.Color;
 
 public class ExponentialSlider extends Slider {
     

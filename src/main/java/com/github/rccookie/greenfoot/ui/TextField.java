@@ -1,7 +1,7 @@
 package com.github.rccookie.greenfoot.ui;
 
-import greenfoot.Color;
-import greenfoot.Greenfoot;
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.Core;
 
 public class TextField extends TextButton {
 
@@ -27,14 +27,15 @@ public class TextField extends TextButton {
     }
 
     protected void setupAction(String question) {
-        addClickAction(() -> getText().setTitle(Greenfoot.ask(question)));
+        addOnClick(() -> getText().setTitle(Core.ask(question)));
     }
 
 
+
     /*@Override
-    protected GreenfootImage createMainImage() {
+    protected Image createMainImage() {
         // Create correct sized image
-        GreenfootImage image = new GreenfootImage(get, minY);
+        Image image = new Image(get, minY);
 
         // Fill background around text with text background color or default color, if null
         if(getText().getBackgroundColor() == null) {

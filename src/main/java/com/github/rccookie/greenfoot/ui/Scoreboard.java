@@ -5,7 +5,7 @@ import java.util.List;
 import com.github.rccookie.greenfoot.core.Color;
 import com.github.rccookie.greenfoot.core.User;
 
-public class Scoreboard extends UIPanel {
+public class Scoreboard extends Panel {
     public static final int MIN_WIDTH = 200, MIN_HEIGHT = (int) (ScorePanel.HEIGHT * 2.5);
 
     public Scoreboard(int width, int height) {
@@ -56,7 +56,7 @@ public class Scoreboard extends UIPanel {
     }
 
 
-    public static class ScorePanel extends UIPanel {
+    public static class ScorePanel extends Panel {
 
         public static int SCORE_PRECITION = 1;
 

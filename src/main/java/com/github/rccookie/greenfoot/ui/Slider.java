@@ -1,12 +1,13 @@
 package com.github.rccookie.greenfoot.ui;
 
-import greenfoot.GreenfootImage;
-import greenfoot.MouseInfo;
 
-import com.github.rccookie.common.geometry.Edge2D;
-import com.github.rccookie.common.geometry.Vector2D;
-import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.event.Input;
+import com.github.rccookie.util.ClassTag;
+import com.github.rccookie.geometry.Edge;
+import com.github.rccookie.geometry.Edge2D;
+import com.github.rccookie.geometry.Vector;
+import com.github.rccookie.geometry.Vector2D;
+import com.github.rccookie.greenfoot.core.Image;
+import com.github.rccookie.greenfoot.core.MouseState;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 import com.github.rccookie.greenfoot.ui.util.UIElement;
 
@@ -29,7 +30,7 @@ public class Slider extends UIElement {
     private double min, max;
     private int length;
 
-    private Edge2D edge;
+    private Edge edge;
     private final Handle handle;
 
     public Slider(){
@@ -47,18 +48,19 @@ public class Slider extends UIElement {
         if(length < 10) length = 10;
 
         handle = addSubElement(new Handle());
-        Vector2D slideVector = Vector2D.angledVector(0, length);
-        edge = new Edge2D(getLocation().subtract(slideVector.scaled(0.5)), slideVector);
+        Vector slideVector = Vector2D.angledVector(0, length);
+        edge = new Edge2D(getLocation().subtracted(slideVector.scaled(0.5)).get2D(), slideVector.get2D());
 
         addPressAction(() -> {
-            setLocation(edge.get(getPercentage(Input.mouseState().getLocation())));
+            setLocation(edge.get(getPercentage(MouseState.get().location)));
             setValue(handle.value);
         });
-        addAddedAction(world -> world.addObject(handle, getX(), getY()));
+        addOnAdd(world -> world.add(handle, getX(), getY()));
     }
 
 
-    private double getPercentage(Vector2D loc) {
+
+    private double getPercentage(Vector loc) {
         double r = edge.edge().x() * (loc.x() - edge.root().x()) + edge.edge().y() * (loc.y() - edge.root().y());
         r /= edge.edge().x() * edge.edge().x() + edge.edge().y() * edge.edge().y();
         if(r < 0) r = 0;
@@ -102,19 +104,19 @@ public class Slider extends UIElement {
     }*/
 
     @Override
-    public void setRotation(int angle){
+    public void setRotation(double angle){
         super.setRotation(angle);
         handle.setRotation(angle);
         double oldValue = getValue();
-        Vector2D slideVector = Vector2D.angledVector(0, length);
-        edge = new Edge2D(getLocation().subtract(slideVector.scaled(0.5)), slideVector);
+        Vector slideVector = Vector2D.angledVector(0, length);
+        edge = new Edge2D(getLocation().subtracted(slideVector.scaled(0.5)).get2D(), slideVector.get2D());
         setValue(oldValue);
     }
 
     @Override
-    public void setLocation(int x, int y){
+    public void setLocation(Vector location){
         double oldValue = getValue();
-        super.setLocation(x, y);
+        super.setLocation(location);
         setValue(oldValue);
     }
 
@@ -137,22 +139,14 @@ public class Slider extends UIElement {
 
     @Override
     protected void regenerateImages() {
-        GreenfootImage image = new GreenfootImage(length, WIDTH);
+        Image image = new Image(length, WIDTH);
         image.setColor(elementColor("slider"));
         image.fillRect(WIDTH / 2, 0, length - WIDTH, WIDTH);
         image.fillOval(0, 0, WIDTH - 1, WIDTH - 1);
         image.fillOval(length - WIDTH, 0, WIDTH - 1, WIDTH - 1);
         setImage(image);
     }
-
-    public boolean remove() {
-        if(getWorld() == null) return false;
-        handle.remove();
-        return super.remove();
-    }
     
-
-
 
 
     // --------------------------------------------
@@ -163,18 +157,18 @@ public class Slider extends UIElement {
 
         public static final int SIZE = 14;
 
-        Vector2D offset;
+        Vector offset;
         public double value;
 
         public Handle() {
             super(generateHandleImage());
             addPressAction(() -> updateOffset());
             addReleaseAction(() -> offset = null);
-            addAddedAction(world -> value = getValue());
+            addOnAdd(world -> value = getValue());
         }
 
         @Override
-        protected void createHoverImage(GreenfootImage base) {
+        protected void createHoverImage(Image base) {
             base.setColor(Interactable.HOVER_OUTLINE_COLOR);
             base.drawOval(0, 0, base.getWidth() - 1, base.getHeight() - 1);
             base.drawOval(1, 1, base.getWidth() - 3, base.getHeight() - 3);
@@ -183,7 +177,7 @@ public class Slider extends UIElement {
         public void run() {
             if(offset != null){
                 try {
-                    setLocation(edge.get(getPercentage(Input.mouseState().getLocation())));
+                    setLocation(edge.get(getPercentage(MouseState.now().get().location)));
                 } catch(Exception e) {
                     offset = null;
                 }
@@ -193,17 +187,12 @@ public class Slider extends UIElement {
         }
 
         public void updateOffset(){
-            try{
-                MouseInfo mouse = Input.mouseInfo();
-                offset = new Vector2D(getX() - mouse.getX(), getY() - mouse.getY());
-            }catch(Exception e){
-                offset = null;
-            }
+            offset = Vector.between(MouseState.get().location, getLocation());
         }
     }
 
-    private GreenfootImage generateHandleImage(){
-        GreenfootImage image = new GreenfootImage(Handle.SIZE, Handle.SIZE);
+    private Image generateHandleImage(){
+        Image image = new Image(Handle.SIZE, Handle.SIZE);
         image.setColor(elementColor("handle"));
         image.fillOval(0, 0, Handle.SIZE - 1, Handle.SIZE - 1);
         return image;

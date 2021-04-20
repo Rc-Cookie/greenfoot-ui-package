@@ -1,6 +1,6 @@
 package com.github.rccookie.greenfoot.ui;
 
-import greenfoot.GreenfootImage;
+import com.github.rccookie.greenfoot.core.Image;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 
 /**
@@ -8,22 +8,22 @@ import com.github.rccookie.greenfoot.ui.util.Interactable;
  */
 public class IconButton extends Interactable {
 
-    private GreenfootImage icon;
+    private Image icon;
 
-    public IconButton(GreenfootImage icon) {
+    public IconButton(Image icon) {
         this.icon = icon;
     }
 
     @Override
-    protected GreenfootImage createMainImage() {
+    protected Image createMainImage() {
         return icon;
     }
 
-    public GreenfootImage getIcon() {
+    public Image getIcon() {
         return icon;
     }
 
-    public void setIcon(GreenfootImage icon) {
+    public void setIcon(Image icon) {
         this.icon = icon;
         imageChanged();
     }

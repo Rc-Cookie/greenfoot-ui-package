@@ -1,8 +1,8 @@
 package com.github.rccookie.greenfoot.ui;
 
-import greenfoot.Color;
-import greenfoot.GreenfootImage;
-import com.github.rccookie.common.util.ClassTag;
+import com.github.rccookie.util.ClassTag;
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.Image;
 import com.github.rccookie.greenfoot.ui.util.UIElement;
 
 public class Fade extends UIElement {
@@ -10,7 +10,7 @@ public class Fade extends UIElement {
     static {
         ClassTag.tag(Fade.class, "ui");
     }
-    
+
     public final Color color;
     public final long duration;
     public final boolean fadeIn;
@@ -22,7 +22,7 @@ public class Fade extends UIElement {
         this.duration = (long)(duration * 1000000000);
         this.fadeIn = fadeIn;
 
-        addAddedAction(w -> {
+        addOnAdd(w -> {
             startTime = System.nanoTime();
             endTime = startTime + this.duration;
             imageChanged();
@@ -58,7 +58,7 @@ public class Fade extends UIElement {
     public void update() {
         long time = System.nanoTime();
         if(time > endTime) {
-            getWorld().removeObject(this);
+            remove();
             return;
         }
         if(fadeIn) getImage().setTransparency((int)(255 * (1 - (time - startTime) / (double)duration)));
@@ -72,8 +72,8 @@ public class Fade extends UIElement {
 
     @Override
     protected void regenerateImages() {
-        if(getWorld() == null) setImage((GreenfootImage)null);
-        GreenfootImage image = new GreenfootImage(getWorld().getWidth(), getWorld().getHeight());
+        if(getMap().isEmpty()) setImage((Image)null);
+        Image image = new Image(getMap().get().getWidth(), getMap().get().getHeight());
         image.setColor(color);
         image.fill();
         setImage(image);

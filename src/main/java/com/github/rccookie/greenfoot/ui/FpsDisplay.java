@@ -3,8 +3,9 @@ package com.github.rccookie.greenfoot.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.rccookie.util.Console;
+import com.github.rccookie.greenfoot.core.Color;
 import com.github.rccookie.greenfoot.ui.util.Design;
-import com.github.rccookie.greenfoot.ui.util.Theme;
 
 /**
  * The fps display shows the current fps in one of two modes: either
@@ -12,7 +13,7 @@ import com.github.rccookie.greenfoot.ui.util.Theme;
  * last second) (as calculated in packages.tools.Time). When clicked
  * on it it switches modes.
  * 
- * @see com.github.rccookie.common.tools.Time
+ * @see com.github.rccookie.tools.Time
  * @author RcCookie
  * @version 1.0
  */
@@ -45,14 +46,16 @@ public class FpsDisplay extends TextButton {
         super(new Text("FPS: --"));
         setUseBigBorder(false);
         setMaxWidth(Integer.MAX_VALUE);
-        setDesign(new Design(getDesign().theme().modified(0, Theme.C_TRANSPARENT), getDesign().textTheme()));
+        setDesign(new Design(getDesign().theme().modified(0, Color.TRANSPARENT), getDesign().textTheme()));
         this.stableMode = stableMode;
-        addClickAction(() -> switchMode());
-        time.addSecondListener(delta -> {
-            getText().setTitle("FPS: " + currentModeFps());
+        addOnClick(() -> switchMode());
+        time.repeat(() -> {
+            Console.debug("Fps update (FPS: {})", currentModeFps());
+            setTitle("FPS: " + currentModeFps());
+            //imageChanged();
             statistics.add(stableFps());
             if(statistics.size() > STATISTICS_SIZE_MAX) statistics.remove(0);
-        });
+        }, 1);
     }
 
 
@@ -62,7 +65,7 @@ public class FpsDisplay extends TextButton {
     @Override
     protected void physicsUpdate() {
         super.physicsUpdate();
-        if(!stableMode) getText().setTitle("FPS: " + currentModeFps());
+        if(!stableMode) setTitle("FPS: " + currentModeFps());
     }
 
 

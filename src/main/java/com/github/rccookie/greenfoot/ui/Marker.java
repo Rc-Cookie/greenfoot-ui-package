@@ -2,28 +2,27 @@ package com.github.rccookie.greenfoot.ui;
 
 import java.util.Objects;
 
-import greenfoot.Actor;
-import greenfoot.Color;
-import greenfoot.GreenfootImage;
-import com.github.rccookie.greenfoot.core.CoreActor;
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.GameObject;
+import com.github.rccookie.greenfoot.core.Image;
 import com.github.rccookie.greenfoot.ui.util.Theme;
  
-public class Marker extends CoreActor {
+public class Marker extends GameObject {
 
     private static final int BORDER = 2;
 
-    private Actor actor;
+    private GameObject object;
     
-    private GreenfootImage lastImage = null;
-    private int lastAngle;
+    private Image lastImage = null;
+    private double lastAngle;
 
     private Theme theme = new Theme(Color.RED);
 
 
-    public Marker(Actor actor) {
-        Objects.requireNonNull(actor);
-        this.actor = actor;
-        lastAngle = actor.getRotation();
+    public Marker(GameObject object) {
+        Objects.requireNonNull(object);
+        this.object = object;
+        lastAngle = object.getAngle();
         
         update();
     }
@@ -32,43 +31,43 @@ public class Marker extends CoreActor {
     @Override
     public void update() {
 
-        if(actor == null) {
-            if(getWorld() != null) getWorld().removeObject(this);
+        if(object == null) {
+            remove();
             return;
         }
 
-        if(actor.getWorld() != getWorld()) {
-            if(actor.getWorld() == null) {
-                setImage((GreenfootImage)null);
+        if(object.getMap().get() != getMap().get()) {
+            if(object.getMap().isEmpty()) {
+                setImage((Image)null);
                 return;
             }
-            actor.getWorld().addObject(this, 0, 0);
+            object.getMap().get().add(this, 0, 0);
         }
-        setLocation(actor);
-        
-        if(actor.getRotation() != lastAngle || actor.getImage() != lastImage) {
+        setLocation(object);
 
-            GreenfootImage image;
-            if(actor.getImage() == null) image = null;
+        if(object.getAngle() != lastAngle || object.getImage() != lastImage) {
+
+            Image image;
+            if(object.getImage() == null) image = null;
             else {
-                double sin = Math.sin(Math.toRadians(actor.getRotation())), cos = Math.cos(Math.toRadians(actor.getRotation()));
-                int w = (int)(Math.abs(cos * actor.getImage().getWidth())) + (int)(Math.abs(sin * actor.getImage().getHeight()));
-                int h = (int)(Math.abs(sin * actor.getImage().getWidth())) + (int)(Math.abs(cos * actor.getImage().getHeight()));
+                double sin = Math.sin(Math.toRadians(object.getAngle())), cos = Math.cos(Math.toRadians(object.getAngle()));
+                int w = (int)(Math.abs(cos * object.getImage().getWidth())) + (int)(Math.abs(sin * object.getImage().getHeight()));
+                int h = (int)(Math.abs(sin * object.getImage().getWidth())) + (int)(Math.abs(cos * object.getImage().getHeight()));
 
-                image = new GreenfootImage(w + BORDER * 2, h + BORDER * 2);
+                image = new Image(w + BORDER * 2, h + BORDER * 2);
                 image.setColor(theme.main());
                 image.drawRect(0, 0, w - 1 + BORDER * 2, h - 1 + BORDER * 2);
             }
             setImage(image);
-            lastImage = actor.getImage();
-            lastAngle = actor.getRotation();
+            lastImage = object.getImage();
+            lastAngle = object.getAngle();
         }
     }
 
 
-    public void setActor(Actor actor) {
-        this.actor = actor;
-        act();
+    public void setActor(GameObject object) {
+        this.object = object;
+        update();
     }
     
     public void setTheme(Theme theme) {

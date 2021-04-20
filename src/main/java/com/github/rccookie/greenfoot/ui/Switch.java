@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import greenfoot.Color;
-import greenfoot.GreenfootImage;
-
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.Image;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 
 
@@ -24,27 +23,27 @@ public class Switch extends Interactable {
 
     public Switch(int size) {
         this.size = size;
-        addClickAction(() -> switchState());
+        addOnClick(() -> switchState());
     }
 
 
 
-    private GreenfootImage generateImageOff(int size) {
+    private Image generateImageOff(int size) {
         if(size < 10) size = 10;
-        GreenfootImage image = generateBackgroundImage(size);
+        Image image = generateBackgroundImage(size);
         image.drawImage(generateHandleImage(Color.RED.darker(), size), 1, 1);
         return image;
     }
 
-    private GreenfootImage generateImageOn(int size) {
+    private Image generateImageOn(int size) {
         if(size < 10) size = 10;
-        GreenfootImage image = generateBackgroundImage(size);
+        Image image = generateBackgroundImage(size);
         image.drawImage(generateHandleImage(Color.GREEN, size), size + 1, 1);
         return image;
     }
 
-    private GreenfootImage generateBackgroundImage(int size) {
-        GreenfootImage image = new GreenfootImage(2 * size, size);
+    private Image generateBackgroundImage(int size) {
+        Image image = new Image(2 * size, size);
         image.setColor(elementColor("background"));
         image.fill();
         image.setColor(Color.DARK_GRAY);
@@ -52,8 +51,8 @@ public class Switch extends Interactable {
         return image;
     }
 
-    private GreenfootImage generateHandleImage(Color c, int size) {
-        GreenfootImage image = new GreenfootImage(size - 2, size - 2);
+    private Image generateHandleImage(Color c, int size) {
+        Image image = new Image(size - 2, size - 2);
         image.setColor(c);
         image.fill();
         image.setColor(c.darker());
@@ -74,7 +73,7 @@ public class Switch extends Interactable {
 
 
     @Override
-    protected GreenfootImage createMainImage() {
+    protected Image createMainImage() {
         return state ? generateImageOn(size) : generateImageOff(size);
     }
 

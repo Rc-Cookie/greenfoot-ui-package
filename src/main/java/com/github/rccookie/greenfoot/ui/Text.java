@@ -1,11 +1,10 @@
 package com.github.rccookie.greenfoot.ui;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import com.github.rccookie.greenfoot.core.FontStyle;
 import com.github.rccookie.greenfoot.core.Image;
+import com.github.rccookie.util.Console;
 import com.github.rccookie.greenfoot.core.Color;
 import com.github.rccookie.greenfoot.ui.util.Design;
 import com.github.rccookie.greenfoot.ui.util.Theme;
@@ -36,10 +35,6 @@ public class Text extends UIElement implements Cloneable {
      * The font of the text drawn.
      */
     private FontStyle font = DEFAULT_FONT;
-
-
-
-    private final List<Runnable> updateActions = new ArrayList<>();
 
 
 
@@ -83,16 +78,19 @@ public class Text extends UIElement implements Cloneable {
      */
     @Override
     protected void regenerateImages() {
-        if(title == null || title.equals("")) setImage(new Image(1, 1));
-        else {
-            //setImage(Image.text(title, elementColor("text"), font));
-            Image image = new Image(Math.max(1, font.getWidth(title)), Math.max(1, font.getHeight(title)));
-            //image.fill(Color.LIGHT_GRAY); // For debugging purposes
-            image.drawString(title, 0, (int)(font.getSize() * 0.75), elementColor(TEXT), font);
-            setImage(image);
+        if(title == null || title.length() == 0) {
+            Console.debug("Text title is empty, using 1x1 cube");
+            setImage(new Image(1, 1));
         }
-
-        for (Runnable action : updateActions) action.run();
+        else {
+            //Console.debug("Text title is '{}', rendering text image", title);
+            setImage(Image.text(title, font.getSize(), elementColor(TEXT)));
+            //setImage(Image.text(title, elementColor("text"), font));
+            //Image image = new Image(Math.max(1, font.getWidth(title)), Math.max(1, font.getHeight(title)));
+            ////image.fill(Color.LIGHT_GRAY); // For debugging purposes
+            //image.drawString(title, 0, (int)(font.getSize() * 0.75), elementColor(TEXT), font);
+            //setImage(image);
+        }
     }
 
 
@@ -103,6 +101,7 @@ public class Text extends UIElement implements Cloneable {
      * @param title The new text
      */
     public Text setTitle(String title) {
+        if(Objects.equals(this.title, title)) return this;
         this.title = title;
         imageChanged();
         return this;
@@ -115,6 +114,7 @@ public class Text extends UIElement implements Cloneable {
      * @return This text
      */
     public Text setFont(FontStyle font) {
+        if(Objects.equals(this.font, font)) return this;
         this.font = font;
         imageChanged();
         return this;
@@ -174,32 +174,15 @@ public class Text extends UIElement implements Cloneable {
 
 
 
-    /**
-     * Adds an action that will be executed whenever the image of the text
-     * gets updated (usually meaning it changed).
-     * 
-     * @param nothing The action to add
-     */
-    public Text addUpdateAction(Runnable action) {
-        if(action == null) return this;
-        updateActions.add(action);
-        return this;
-    }
-
-    /**
-     * Removes the given action from being excuted whenever the image
-     * of the text gets updated.
-     * 
-     * @param action The action to remove
-     */
-    public void removeUpdateAction(Runnable action) {
-        updateActions.remove(action);
-    }
-
-
-
     @Override
     protected void assignDefaultColorMappings() {
         mapColor(TEXT, 0, true);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        if(!(obj instanceof Text)) return false;
+        return Objects.equals(font, ((Text)obj).font) && Objects.equals(title, ((Text)obj).title);
     }
 }

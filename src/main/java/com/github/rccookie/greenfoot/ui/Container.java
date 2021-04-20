@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
-import greenfoot.Actor;
-import greenfoot.Color;
-import greenfoot.GreenfootImage;
-import greenfoot.World;
-import com.github.rccookie.common.util.ClassTag;
-
+import com.github.rccookie.util.ClassTag;
+import com.github.rccookie.geometry.Vector;
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.GameObject;
+import com.github.rccookie.greenfoot.core.Image;
+import com.github.rccookie.greenfoot.core.Map;
 
 /**
- * The container is a type of actor that can display and run worlds. This allowes to
+ * The container is a type of object that can display and run worlds. This allowes to
  * display multiple worlds at once, or having one small world (for example a game) inside
  * of a big world (for example the ui and menu).
  * <p>Containers can either show an existing world or act as their own. Therefore, they
@@ -23,7 +24,7 @@ import com.github.rccookie.common.util.ClassTag;
  * @author RcCookie
  * @version 1.0
  */
-public class Container extends UIPanel {
+public class Container extends Panel {
 
     static {
         ClassTag.tag(Container.class, "ui");
@@ -45,7 +46,7 @@ public class Container extends UIPanel {
     /**
      * The underlying world, or the given world to be displayed.
      */
-    protected final World manageWorld;
+    protected final Map manageMap;
 
     /**
      * Weather the world should be bounded.
@@ -68,7 +69,7 @@ public class Container extends UIPanel {
     /**
      * Saves the remaining time until each managed world should be acted.
      */
-    static HashMap<World, Integer> timeUntilAct = new HashMap<>();
+    static HashMap<Map, Integer> timeUntilAct = new HashMap<>();
 
 
 
@@ -96,16 +97,9 @@ public class Container extends UIPanel {
      */
     public Container(int width, int height, int cellSize, boolean bounded){
         super(width, height, Color.WHITE);
-        manageWorld = new World(width, height, cellSize, bounded) {
-            @Override
-            public void repaint() {
-                //Do nothing: This world is never displayed, so we don't have to calculate how it would look like
-
-                //This optimization can only be made if the container is its own world, rather than showing an existing one.
-            }
-        };
+        manageMap = new Map(width, height, cellSize, bounded) { };
         this.bounded = bounded;
-        setBackground((GreenfootImage)null);
+        setBackground((Image)null);
         repaint();
     }
 
@@ -115,9 +109,9 @@ public class Container extends UIPanel {
      * 
      * @param shownWorld The world that should be shown
      */
-    public Container(World shownWorld){
+    public Container(Map shownWorld){
         super(shownWorld.getWidth(), shownWorld.getHeight(), Color.WHITE);
-        manageWorld = shownWorld;
+        manageMap = shownWorld;
         this.bounded = false;
         repaint();
     }
@@ -136,14 +130,13 @@ public class Container extends UIPanel {
         super.physicsUpdate();
 
         //Make sure that having multiple containers pointing at the same map won't act them multiple times
-        if(getTimeUntilAct(manageWorld) <= 0){
-            timeUntilAct.put(manageWorld, numberOfActsPerFrame());
-            for(Actor a : objectsInActOrder()) a.act();
-            manageWorld.act();
+        if(getTimeUntilAct(manageMap) <= 0){
+            timeUntilAct.put(manageMap, numberOfActsPerFrame());
+            Map.asWorld(manageMap).act();
         }
         repaint();
 
-        timeUntilAct.put(manageWorld, getTimeUntilAct(manageWorld) - 1);
+        timeUntilAct.put(manageMap, getTimeUntilAct(manageMap) - 1);
     }
 
 
@@ -153,7 +146,7 @@ public class Container extends UIPanel {
      * @param manageWorld The world to get the remaining time for
      * @return The remaining time
      */
-    static int getTimeUntilAct(World manageWorld){
+    static int getTimeUntilAct(Map manageWorld){
         Integer count = timeUntilAct.get(manageWorld);
         if(count == null) count = 0;
         return count;
@@ -166,8 +159,8 @@ public class Container extends UIPanel {
      */
     int numberOfActsPerFrame(){
         int count = 0;
-        for(Container c : getWorld().getObjects(Container.class)){
-            if(c.manageWorld == manageWorld) count++;
+        for(Container c : getMap().get().findAll(Container.class)){
+            if(c.manageMap == manageMap) count++;
         }
         return count;
     }
@@ -214,8 +207,8 @@ public class Container extends UIPanel {
      * 
      * @param background The new background image
      */
-    public void setBackground(GreenfootImage background){
-        manageWorld.setBackground(background);
+    public void setBackground(Image background){
+        manageMap.setBackground(background);
     }
 
     /**
@@ -224,28 +217,28 @@ public class Container extends UIPanel {
      * @param filename The new background image's filename
      */
     public void setBackground(String filename){
-        manageWorld.setBackground(filename);
+        manageMap.setBackground(Image.load(filename));
     }
 
     /**
      * Adds an object at the specified locaiton into the container.
      * 
-     * @param object The actor to add
+     * @param object The object to add
      * @param x The actors x coordinate
      * @param y The actors y coordinate
      */
-    public void addObject(Actor object, int x, int y){
-        manageWorld.addObject(object, x, y);
+    public void add(GameObject object, Vector location){
+        manageMap.add(object, location);
         if(!usePerformanceMode) repaint();
     }
 
     /**
      * Removes the given object from the container.
      * 
-     * @param object The actor to remove
+     * @param object The object to remove
      */
-    public void removeObject(Actor object){
-        manageWorld.removeObject(object);
+    public void remove(GameObject object){
+        manageMap.remove(object);
         if(!usePerformanceMode) repaint();
     }
 
@@ -254,22 +247,22 @@ public class Container extends UIPanel {
      * 
      * @param objects The actors to remove
      */
-    public void removeObjects(Collection<? extends Actor> objects){
-        manageWorld.removeObjects(objects);
+    public void removeAll(Collection<GameObject> objects){
+        manageMap.removeAll(objects);
         if(!usePerformanceMode) repaint();
     }
 
 
 
-    //World getters
+    //Map getters
 
     /**
      * Returns the background image of the container.
      * 
      * @return The background image
      */
-    public GreenfootImage getBackground() {
-        return manageWorld.getBackground();
+    public Image getBackground() {
+        return manageMap.getBackground();
     }
 
     /**
@@ -278,7 +271,7 @@ public class Container extends UIPanel {
      * @return The width of the container
      */
     public int getWidth() {
-        return manageWorld.getWidth();
+        return manageMap.getWidth();
     }
 
     /**
@@ -287,7 +280,7 @@ public class Container extends UIPanel {
      * @return The height of the container
      */
     public int getHeight() {
-        return manageWorld.getHeight();
+        return manageMap.getHeight();
     }
 
     /**
@@ -296,7 +289,7 @@ public class Container extends UIPanel {
      * @return The cell size of the container
      */
     public int getCellSize() {
-        return manageWorld.getCellSize();
+        return manageMap.getCellSize();
     }
 
     /**
@@ -316,7 +309,7 @@ public class Container extends UIPanel {
      * @return The color at the location
      */
     public Color getColorAt(int x, int y){
-        return manageWorld.getColorAt(x, y);
+        return manageMap.getColorAt(x, y);
     }
 
     /**
@@ -325,8 +318,8 @@ public class Container extends UIPanel {
      * @param cls The class of the objects, or null
      * @return The objects of the given class
      */
-    public <A> List<A> getObjects(Class<A> cls){
-        return manageWorld.getObjects(cls);
+    public <A> Set<A> findAll(Class<A> cls){
+        return manageMap.findAll(cls);
     }
 
     /**
@@ -335,17 +328,8 @@ public class Container extends UIPanel {
      * @param cls The class of the objects, or null
      * @return The objects of the given class
      */
-    public <A> List<A> getObjectsAt(int x, int y, Class<A> cls){
-        return manageWorld.getObjectsAt(x, y, cls);
-    }
-
-    /**
-     * Get the number of actors currently in the container.
-     * 
-     * @return The number of actors
-     */
-    public int numberOfObjects(){
-        return manageWorld.numberOfObjects();
+    public <A> Set<A> findAllAt(Vector location, Class<A> cls){
+        return manageMap.findAllAt(location, cls);
     }
 
 
@@ -368,16 +352,16 @@ public class Container extends UIPanel {
      */
     public void repaint(){
 
-        GreenfootImage displayed = new GreenfootImage(getWidth(), getHeight());
+        Image displayed = new Image(getWidth(), getHeight());
         displayed.drawImage(getBackground(), 0, 0);
 
-        for(Actor object : objectsInPaintOrder()){
+        for(GameObject object : objectsInPaintOrder()){
 
-            int objX = object.getX() * (getImage().getWidth() / getWidth());
-            int objY = object.getY() * (getImage().getHeight() / getHeight());
+            int objX = (int)(object.getX() * (getImage().getWidth() / getWidth()));
+            int objY = (int)(object.getY() * (getImage().getHeight() / getHeight()));
 
             //calculate the maximum size of the rotated image
-            GreenfootImage objectsImage = object.getImage();
+            Image objectsImage = object.getImage();
             int diagonal = (int)Math.hypot(objectsImage.getWidth(), objectsImage.getHeight());
 
             if(bounded){
@@ -395,9 +379,9 @@ public class Container extends UIPanel {
             ) continue; //Don't render it - it's outside of vision
 
             //gererate the rotated image
-            GreenfootImage image = new GreenfootImage(diagonal, diagonal);
+            Image image = new Image(diagonal, diagonal);
             image.drawImage(objectsImage, diagonal / 2 - objectsImage.getWidth() / 2, diagonal / 2 - objectsImage.getHeight() / 2);
-            image.rotate((int)object.getRotation());
+            image.rotate((int)object.getAngle());
 
             //draw rotated image onto displayed image
             int objectX = (int)objX * getCellSize() + (int)(0.5 * getCellSize());
@@ -426,11 +410,11 @@ public class Container extends UIPanel {
      * 
      * @return The objects in working paint order
      */
-    protected List<Actor> objectsInPaintOrder(){
-        ArrayList<Actor> ordered = new ArrayList<>();
+    protected List<GameObject> objectsInPaintOrder(){
+        ArrayList<GameObject> ordered = new ArrayList<>();
 
         //Add non-listed class objects
-        for(Actor current : getObjects(Actor.class)){
+        for(GameObject current : findAll(GameObject.class)){
             if(paintOrder.contains(current.getClass())) continue;
             ordered.add(current);
         }
@@ -438,7 +422,7 @@ public class Container extends UIPanel {
         //Add listed class objects in reverse to paint the highest last
         for(int i=paintOrder.size()-1; i>=0; i--){
             objectLoop:
-            for(Actor current : getObjects(Actor.class)) {
+            for(GameObject current : findAll(GameObject.class)) {
                 if(current.getClass() != paintOrder.get(i)) continue objectLoop;
                 ordered.add(current);
             }
@@ -449,26 +433,25 @@ public class Container extends UIPanel {
 
 
 
-
     /**
      * Returns all objects in the world in the act order.
      * 
      * @return All objects in act order
      */
-    protected List<Actor> objectsInActOrder(){
-        ArrayList<Actor> ordered = new ArrayList<>();
+    protected List<GameObject> objectsInActOrder(){
+        ArrayList<GameObject> ordered = new ArrayList<>();
 
         //Add listed class objects
         for(Class<?> cls : actOrder){
             objectLoop:
-            for(Actor current : getObjects(Actor.class)) {
+            for(GameObject current : findAll(GameObject.class)) {
                 if(current.getClass() != cls) continue objectLoop;
                 ordered.add(current);
             }
         }
 
         //Add non-listed class objects
-        for(Actor current : getObjects(Actor.class)){
+        for(GameObject current : findAll(GameObject.class)){
             if(actOrder.contains(current.getClass())) continue;
             ordered.add(current);
         }

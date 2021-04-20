@@ -1,6 +1,6 @@
 package com.github.rccookie.greenfoot.ui;
 
-import greenfoot.Greenfoot;
+import com.github.rccookie.greenfoot.core.Core;
 
 public class NumberField extends TextField {
 
@@ -28,11 +28,11 @@ public class NumberField extends TextField {
 
     @Override
     protected void setupAction(String question) {
-        addClickAction(() -> setContent(question));
+        addOnClick(() -> setContent(question));
     }
 
     private void setContent(String question) {
-        String input = Greenfoot.ask(question);
+        String input = Core.ask(question);
         try{
             if(useDoubles) setTitle(Double.parseDouble(input) + "");
             else setTitle((int)Double.parseDouble(input) + "");

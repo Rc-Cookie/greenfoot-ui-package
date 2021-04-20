@@ -2,12 +2,14 @@ package com.github.rccookie.greenfoot.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
-import greenfoot.Color;
-import greenfoot.GreenfootImage;
-import com.github.rccookie.common.util.ClassTag;
+import com.github.rccookie.util.ClassTag;
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.Image;
 import com.github.rccookie.greenfoot.event.KeyListener;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 
@@ -77,7 +79,7 @@ public class DropDownMenu extends TextButton {
 
         backpanel = addSubElement(new Backpanel());
 
-        addClickAction(() -> openMenu());
+        addOnAdd(() -> openMenu());
     }
 
 
@@ -88,7 +90,7 @@ public class DropDownMenu extends TextButton {
         setEnabled(false);
 
         int offset = getImage().getHeight();
-        getWorld().addObject(backpanel, getX(), getY() + (int)(0.5 * TOP_BOTTOM_BORDER) + (int)((menuButtons.length - 1) * offset / 2d));
+        getMap().ifPresent(m -> m.add(backpanel, getX(), getY() + (int)(0.5 * TOP_BOTTOM_BORDER) + (int)((menuButtons.length - 1) * offset / 2d)));
 
         for(int i=0; i<menuButtons.length; i++)
             backpanel.add(menuButtons[i], 0.5, 0, 0, 1.5 * TOP_BOTTOM_BORDER + getImage().getHeight() / 2 + offset * i);
@@ -140,7 +142,7 @@ public class DropDownMenu extends TextButton {
 
 
 
-    public class Backpanel extends UIPanel {
+    public class Backpanel extends Panel {
 
         private Backpanel() {
             super(
@@ -148,7 +150,7 @@ public class DropDownMenu extends TextButton {
                 menuButtons.length * DropDownMenu.this.getImage().getHeight() + 2 * TOP_BOTTOM_BORDER
             );
 
-            addClickAction(() -> closeMenu(title.getTitle()));
+            addOnClick(() -> closeMenu(title.getTitle()));
         }
 
         @Override
@@ -177,9 +179,9 @@ public class DropDownMenu extends TextButton {
 
         private MenuButton(String name) {
             super(title.clone().setTitle(name));
-            addClickAction(() -> closeMenu(getTitle()));
+            addOnClick(() -> closeMenu(getTitle()));
             escListener.addListener(() -> closeMenu(title.getTitle()));
-            addAddedAction(world -> {
+            addOnAdd(() -> {
                 if(getTitle().equals(getSelection())) mapColor("background", 2, false);
                 else mapColor("background", 0, false);
             });
@@ -204,15 +206,15 @@ public class DropDownMenu extends TextButton {
         }
 
         @Override
-        protected void createHoverImage(GreenfootImage base) {
+        protected void createHoverImage(Image base) {
             base.setColor(new Color(0, 0, 0, 30));
             base.fill();
         }
 
 
         @Override
-        public List<Interactable> getFocusable() {
-            return new ArrayList<>(Arrays.asList(menuButtons));
+        public Set<Interactable> getFocusable() {
+            return new HashSet<>(Arrays.asList(menuButtons));
         }
 
         @Override

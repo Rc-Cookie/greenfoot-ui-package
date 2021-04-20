@@ -1,13 +1,13 @@
 package com.github.rccookie.greenfoot.ui;
 
-import greenfoot.Actor;
-import greenfoot.Color;
-import greenfoot.GreenfootImage;
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.GameObject;
+import com.github.rccookie.greenfoot.core.Image;
 
 /**
- * The camera can display a specific area of a world. This area's locaiton is fixed to an actor
+ * The camera can display a specific area of a world. This area's locaiton is fixed to an object
  * in that world.
- * <p>The camera is an actor, not a world. It can be moved, you can have multiple cameras in one world
+ * <p>The camera is an object, not a world. It can be moved, you can have multiple cameras in one world
  * (=> splitscreen) and they don't have to match the current world's size.
  * 
  * @author RcCookie
@@ -31,9 +31,9 @@ public class Camera extends Container {
 
 
     /**
-     * The actor that the camera follows. You may create an actor that is stationary to have a camera fixed to a certain point.
+     * The object that the camera follows. You may create an object that is stationary to have a camera fixed to a certain point.
      */
-    final Actor follow;
+    final GameObject follow;
 
     /**
      * The background color. This color is shown anywhere where displayed world ends.
@@ -52,14 +52,14 @@ public class Camera extends Container {
 
 
     /**
-     * Creates a new Camera with the specified size following the given actor in its world.
+     * Creates a new Camera with the specified size following the given object in its world.
      * 
      * @param camWidth The width of the cameras screen
      * @param camHeight The height of the cameras screen
-     * @param follow The actor to follow
+     * @param follow The object to follow
      */
-    public Camera(int camWidth, int camHeight, Actor follow){
-        super(follow.getWorld());
+    public Camera(int camWidth, int camHeight, GameObject follow){
+        super(follow.getMap().get());
         this.follow = follow;
         this.camWidth = camWidth;
         this.camHeight = camHeight;
@@ -67,11 +67,11 @@ public class Camera extends Container {
     }
 
     /**
-     * Creates a new Camera with a default size following the given actor in its worls.
+     * Creates a new Camera with a default size following the given object in its worls.
      * 
-     * @param follow The actor to follow
+     * @param follow The object to follow
      */
-    public Camera(Actor follow){
+    public Camera(GameObject follow){
         this(DEFAULT_WIDTH, DEFAULT_HEIGHT, follow);
     }
 
@@ -157,35 +157,35 @@ public class Camera extends Container {
         //When super constructor is called, follow is not assigned yet
         if(follow == null) return;
 
-        //The offset due to the follow actor moving or generally, not being at the center
+        //The offset due to the follow object moving or generally, not being at the center
         int offX = camWidth / 2 - (int)(follow.getX() * getCellSize() * zoom);
         int offY = camHeight / 2 - (int)(follow.getY() * getCellSize() * zoom);
 
-        GreenfootImage displayed = new GreenfootImage(camWidth, camHeight);
+        Image displayed = new Image(camWidth, camHeight);
         displayed.setColor(backgroundColor);
         displayed.fill();
         if(zoom != 1){
-            GreenfootImage background = new GreenfootImage(getBackground());
+            Image background = getBackground().clone();
             background.scale((int)(background.getWidth() * zoom), (int)(background.getHeight() * zoom));
             displayed.drawImage(background, offX, offY);
         }
         else displayed.drawImage(getBackground(), offX, offY);
 
-        for(Actor object : objectsInPaintOrder()){
+        for(GameObject object : objectsInPaintOrder()){
 
-            
+
 
             //create rotated image of actors image
-            GreenfootImage objectsImage = object.getImage();
+            Image objectsImage = object.getImage();
             if(zoom != 1) {
-                objectsImage = new GreenfootImage(objectsImage);
+                objectsImage = objectsImage.clone();
                 objectsImage.scale((int)(objectsImage.getWidth() * zoom), (int)(objectsImage.getHeight() * zoom));
             }
             int diagonal = (int)Math.hypot(objectsImage.getWidth(), objectsImage.getHeight());
 
-            int objX = object.getX(), objY = object.getY();
+            int objX = (int)object.getX(), objY = (int)object.getY();
 
-            
+
             if(bounded){
                 if(objX < 0) objX = 0;
                 else if(objX >= getWidth()) objX = getWidth() - 1;
@@ -200,9 +200,9 @@ public class Camera extends Container {
                 (int)(objY * getCellSize() * zoom) - diagonal / 2 >= -offY + getHeight() * getCellSize()
             ) continue; //Don't render it - it's outside of vision
 
-            GreenfootImage image = new GreenfootImage(diagonal, diagonal);
+            Image image = new Image(diagonal, diagonal);
             image.drawImage(objectsImage, diagonal / 2 - objectsImage.getWidth() / 2, diagonal / 2 - objectsImage.getHeight() / 2);
-            image.rotate((int)object.getRotation());
+            image.rotate((int)object.getAngle());
 
             //draw rotated image onto displayed image
             int objectX = (int)((int)objX * getCellSize() * zoom) + (int)(0.5 * getCellSize() * zoom);

@@ -5,16 +5,14 @@ import com.github.rccookie.greenfoot.ui.util.Design;
 import com.github.rccookie.greenfoot.ui.util.Theme;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
-import greenfoot.Actor;
-import greenfoot.Color;
-import greenfoot.GreenfootImage;
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.GameObject;
+import com.github.rccookie.greenfoot.core.Image;
+import com.github.rccookie.greenfoot.core.Map;
 
-import com.github.rccookie.greenfoot.core.CoreWorld;
-
-public abstract class UIWorld extends CoreWorld {
+public abstract class UIMap extends Map {
 
     private static Class<?>[] UI_CLASS_PAINT_ORDER = {
         FpsDisplay.class,
@@ -26,7 +24,7 @@ public abstract class UIWorld extends CoreWorld {
         Slider.Handle.class,
         Slider.class,
         Text.class,
-        UIPanel.class
+        Panel.class
     };
 
 
@@ -44,93 +42,41 @@ public abstract class UIWorld extends CoreWorld {
 
 
 
-
-    private Class<?>[] customPaintOrder;
-
-    public UIWorld(int width, int height) {
-        this(width, height, 1);
-        bluej.Boot
+    public UIMap() {
+        this(Map.DEFAULT_WIDTH, Map.DEFAULT_HEIGHT);
     }
 
-    public UIWorld(int x, int y, int cellSize){
+    public UIMap(int width, int height) {
+        this(width, height, 1);
+    }
+
+    public UIMap(int x, int y, int cellSize){
         this(x, y, cellSize, false);
     }
 
-    public UIWorld(int x, int y, int cellSize, boolean bounded){
+    public UIMap(int x, int y, int cellSize, boolean bounded){
         super(x, y, cellSize, bounded);
         assignDefaultColorMappings();
 
         colorBackground(Color.WHITE);
 
-        setPaintOrder();
+        setPaintOrder(UI_CLASS_PAINT_ORDER);
     }
 
 
 
     @Override
-    public void addObject(Actor object, int x, int y) {
-        setPaintOrder(customPaintOrder);
-        super.addObject(object, x, y);
+    public void add(GameObject object, double x, double y) {
+        super.add(object, x, y);
 
         // Create button navi if there is no and a button but not a fps display is added
         if(buttonNavi == null && object instanceof TextButton && !(object instanceof FpsDisplay)) buttonNavi = new UINavigator(this);
     }
 
 
-    /**
-     * Returns one object of the specified class, or {@code null} if there are none.
-     * 
-     * @param <A> The type of actor
-     * @param clazz The class of that tyoe
-     * @return One object of the specified class, or {@code null}
-     */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public <A extends Actor> A getObject(Class<? extends A> clazz) {
-        List<A> objects = getObjects((Class)clazz);
-        if(objects.size() == 0) return null;
-        return objects.get(0);
-    }
-
-    /**
-     * Defines the order of painting. UI elements are automatically at the top. To override their position,
-     * specificly set them to the position in the ordering you want them to be in.
-     */
-    @SuppressWarnings("rawtypes")
-    @Override
-    public void setPaintOrder(Class... classes) {
-        customPaintOrder = classes;
-        super.setPaintOrder(combineClasses(UI_CLASS_PAINT_ORDER, classes != null ? classes : new Class[0]));
-    }
-
-    private Class<?>[] combineClasses(Class<?>[] a, Class<?>[] b) {
-        int twice = 0;
-        aLoop: for(Class<?> clsA : a) {
-            for(Class<?> clsB : b) {
-                if(clsA == clsB) {
-                    twice++;
-                    continue aLoop;
-                }
-            }
-        }
-        Class<?>[] c = new Class[a.length + b.length - twice];
-        twice = 0;
-        aLoop: for(int i=0; i<a.length; i++) {
-            for(Class<?> clsB : b) {
-                if(a[i] == clsB) {
-                    twice++;
-                    continue aLoop;
-                }
-            }
-            c[i - twice] = a[i];
-        }
-        for(int i=0; i<b.length; i++) {
-            c[a.length - twice + i] = b[i];
-        }
-        return c;
-    }
 
     public void addFps(){
-        if(getObjects(FpsDisplay.class).size() == 0) addObject(new FpsDisplay(), 42, 13);
+        if(find(FpsDisplay.class).isEmpty()) add(new FpsDisplay(), 42, 13);
     }
 
     public void colorBackground(Color color) {
@@ -146,7 +92,7 @@ public abstract class UIWorld extends CoreWorld {
 
 
     @Override
-    public GreenfootImage getBackground() {
+    public Image getBackground() {
         if(backgroundChanged) {
             backgroundChanged = false;
             regenerateBackground();
@@ -156,7 +102,7 @@ public abstract class UIWorld extends CoreWorld {
 
 
     protected void regenerateBackground() {
-        GreenfootImage background = new GreenfootImage(getWidth(), getHeight());
+        Image background = new Image(getWidth(), getHeight());
         if(colorBackground) {
             background.setColor(elementColor("plain-world-background"));
             background.fill();
@@ -249,7 +195,7 @@ public abstract class UIWorld extends CoreWorld {
      * @param design The new design
      * @return This element
      */
-    public UIWorld setDesign(Design design) {
+    public UIMap setDesign(Design design) {
         Objects.requireNonNull(design, "The design must not be null");
         if(this.design == design) return this;
         this.design = design;
@@ -263,7 +209,7 @@ public abstract class UIWorld extends CoreWorld {
      * @param theme The new theme
      * @return This element
      */
-    public UIWorld setTheme(Theme theme) {
+    public UIMap setTheme(Theme theme) {
         Objects.requireNonNull(theme, "The theme must not be null");
         if(getDesign().theme() == theme) return this;
         return setDesign(new Design(theme, getDesign().textTheme()));
@@ -275,7 +221,7 @@ public abstract class UIWorld extends CoreWorld {
      * @param theme The new text theme
      * @return This element
      */
-    public UIWorld setTextTheme(Theme theme) {
+    public UIMap setTextTheme(Theme theme) {
         Objects.requireNonNull(theme, "The theme must not be null");
         if(getDesign().textTheme() == theme) return this;
         return setDesign(new Design(getDesign().theme(), theme));
@@ -288,7 +234,7 @@ public abstract class UIWorld extends CoreWorld {
      * @return This element
      * @throws NullPointerException If the background color was never assigned
      */
-    public UIWorld setBackgroundColor(Color color) {
+    public UIMap setBackgroundColor(Color color) {
         Objects.requireNonNull(color, "The color must not be null");
         if(elementColor("background").equals(color)) return this;
         return setTheme(getDesign().theme().modified(getColorIndex("background"), color));
@@ -305,7 +251,7 @@ public abstract class UIWorld extends CoreWorld {
      *               {@code false} otherwise
      * @return This element
      */
-    protected UIWorld mapColor(String elementName, int index, boolean isText) {
+    protected UIMap mapColor(String elementName, int index, boolean isText) {
         Objects.requireNonNull(elementName, "The element must not be null");
         if(index < 0) throw new IllegalArgumentException("Index must be positive");
         ColorMapping newMapping = new ColorMapping(index, isText);

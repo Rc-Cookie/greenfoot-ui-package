@@ -3,28 +3,29 @@ package com.github.rccookie.greenfoot.ui;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import greenfoot.Color;
-import greenfoot.GreenfootImage;
-import greenfoot.World;
-
-import com.github.rccookie.common.geometry.Vector2D;
-import com.github.rccookie.greenfoot.event.Input;
 import com.github.rccookie.greenfoot.event.KeyListener;
 import com.github.rccookie.greenfoot.event.MouseListener;
 import com.github.rccookie.greenfoot.event.NavigatonListener;
-import com.github.rccookie.greenfoot.core.CoreActor;
+import com.github.rccookie.geometry.Vector;
+import com.github.rccookie.greenfoot.core.Color;
+import com.github.rccookie.greenfoot.core.GameObject;
+import com.github.rccookie.greenfoot.core.Image;
+import com.github.rccookie.greenfoot.core.KeyState;
+import com.github.rccookie.greenfoot.core.Map;
 import com.github.rccookie.greenfoot.ui.util.Interactable;
 import com.github.rccookie.greenfoot.ui.util.Theme;
 
-public class UINavigator extends CoreActor {
+public class UINavigator extends GameObject {
 
     public static final int BORDER = 3;
 
 
     private Interactable focused = null;
-    private final World world;
+    private final Map map;
 
     private final Theme theme = new Theme(Color.BLACK, Color.WHITE);
     private final NavigatonListener navi;
@@ -34,11 +35,11 @@ public class UINavigator extends CoreActor {
     private final MouseListener mouseListener;
 
 
-    public UINavigator(World world) {
-        Objects.requireNonNull(world);
-        this.world = world;
+    public UINavigator(Map map) {
+        Objects.requireNonNull(map);
+        this.map = map;
 
-        world.addObject(this, 0, 0);
+        map.add(this, Vector.of());
         
         navi = new NavigatonListener();
         navi.addNaviListener(k -> {
@@ -63,7 +64,7 @@ public class UINavigator extends CoreActor {
 
         tabListener = new KeyListener("tab");
         tabListener.addListener(() -> {
-            focused = Input.keyState("shift") ? getLast() : getNext();
+            focused = KeyState.of("shift").down ? getLast() : getNext();
             updateImage();
         });
 
@@ -77,7 +78,7 @@ public class UINavigator extends CoreActor {
     }
 
     public UINavigator(Interactable focused) {
-        this(focused.getWorld());
+        this(focused.getMap().get());
         this.focused = focused;
         setLocation(focused);
         updateImage();
@@ -101,75 +102,73 @@ public class UINavigator extends CoreActor {
 
 
     private Interactable getAbove() {
-        List<Interactable> buttons = focused != null ? focused.getFocusable() : world.getObjects(Interactable.class);
+        Set<Interactable> buttons = focused != null ? focused.getFocusable() : map.findAll(Interactable.class);
         if(buttons.size() == 0) return null;
         removeIf(buttons, b -> {
             if(b == focused) return true;
-            Vector2D between = Vector2D.between(getLocation(), b.getLocation());
+            Vector between = Vector.between(getLocation(), b.getLocation());
             double angle = between.angle();
             return angle < -135 || angle > -45; 
         });
         if(buttons.size() == 0) return focused;
-        buttons.sort(getComparator());
-        return buttons.get(0);
+        return buttons.stream().sorted(getComparator()).findFirst().get();
     }
 
     private Interactable getBelow() {
-        List<Interactable> buttons = focused != null ? focused.getFocusable() : world.getObjects(Interactable.class);
+        Set<Interactable> buttons = focused != null ? focused.getFocusable() : map.findAll(Interactable.class);
         if(buttons.size() == 0) return null;
         removeIf(buttons, b -> {
             if(b == focused) return true;
-            Vector2D between = Vector2D.between(getLocation(), b.getLocation());
+            Vector between = Vector.between(getLocation(), b.getLocation());
             double angle = between.angle();
             return angle < 45 || angle > 135; 
         });
         if(buttons.size() == 0) return focused;
-        buttons.sort(getComparator());
-        return buttons.get(0);
+        return buttons.stream().sorted(getComparator()).findFirst().get();
     }
 
     private Interactable getLeft() {
-        List<Interactable> buttons = focused != null ? focused.getFocusable() : world.getObjects(Interactable.class);
+        Set<Interactable> buttons = focused != null ? focused.getFocusable() : map.findAll(Interactable.class);
         if(buttons.size() == 0) return null;
         removeIf(buttons, b -> {
             if(b == focused) return true;
-            Vector2D between = Vector2D.between(getLocation(), b.getLocation());
+            Vector between = Vector.between(getLocation(), b.getLocation());
             double angle = between.angle();
             return !(angle <= -135 || angle > 135); 
         });
         if(buttons.size() == 0) return focused;
-        buttons.sort(getComparator());
-        return buttons.get(0);
+        return buttons.stream().sorted(getComparator()).findFirst().get();
     }
 
     private Interactable getRight() {
-        List<Interactable> buttons = focused != null ? focused.getFocusable() : world.getObjects(Interactable.class);
+        Set<Interactable> buttons = focused != null ? focused.getFocusable() : map.findAll(Interactable.class);
         if(buttons.size() == 0) return null;
         removeIf(buttons, b -> {
             if(b == focused) return true;
-            Vector2D between = Vector2D.between(getLocation(), b.getLocation());
+            Vector between = Vector.between(getLocation(), b.getLocation());
             double angle = between.angle();
             return angle < -45 || angle > 45;
         });
         if(buttons.size() == 0) return focused;
-        buttons.sort(getComparator());
-        return buttons.get(0);
+        return buttons.stream().sorted(getComparator()).findFirst().get();
     }
 
     private Interactable getNext() {
-        List<Interactable> buttons = focused != null ? focused.getFocusable() : world.getObjects(Interactable.class);
+        Set<Interactable> buttons = focused != null ? focused.getFocusable() : map.findAll(Interactable.class);
         if(buttons.size() == 0) return null;
-        try{
-            return buttons.get(buttons.indexOf(focused) + 1);
-        } catch(Exception e) { return buttons.get(0); }
+        try {
+            List<Interactable> asList = List.copyOf(buttons);
+            return asList.get(asList.indexOf(focused) + 1);
+        } catch(Exception e) { return buttons.stream().findAny().get(); }
     }
 
     private Interactable getLast() {
-        List<Interactable> buttons = focused != null ? focused.getFocusable() : world.getObjects(Interactable.class);
+        Set<Interactable> buttons = focused != null ? focused.getFocusable() : map.findAll(Interactable.class);
         if(buttons.size() == 0) return null;
-        try{
-            return buttons.get(buttons.indexOf(focused) - 1);
-        } catch(Exception e) { return buttons.get(buttons.size() - 1); }
+        try {
+            List<Interactable> asList = List.copyOf(buttons);
+            return asList.get(asList.indexOf(focused) - 1);
+        } catch(Exception e) { return List.copyOf(buttons).get(buttons.size() - 1); }
     }
 
 
@@ -177,19 +176,18 @@ public class UINavigator extends CoreActor {
     /**
      * Because Greenfoot does not support the method for list online.
      */
-    private void removeIf(List<Interactable> buttons, Predicate<Interactable> filter) {
-        for(int i=0; i<buttons.size();) {
-            if(filter.test(buttons.get(i))) buttons.remove(buttons.get(i));
-            else i++;
-        }
+    private void removeIf(Set<Interactable> buttons, Predicate<Interactable> filter) {
+        Set<Interactable> removed = new HashSet<>();
+        for(Interactable i : buttons) if(filter.test(i)) removed.add(i);
+        buttons.removeAll(removed);
     }
 
 
 
     private Comparator<Interactable> getComparator() {
         return (a, b) -> {
-            double dA = Vector2D.between(getLocation(), a.getLocation()).sqrAbs();
-            double dB = Vector2D.between(getLocation(), b.getLocation()).sqrAbs();
+            double dA = Vector.between(getLocation(), a.getLocation()).sqrAbs();
+            double dB = Vector.between(getLocation(), b.getLocation()).sqrAbs();
             if(dA < dB) return -1;
             if(dB < dA) return 1;
             return 0;
@@ -199,10 +197,10 @@ public class UINavigator extends CoreActor {
 
     private void updateImage() {
         if(focused == null) {
-            setImage((GreenfootImage)null);
+            setImage((Image)null);
             return;
         }
-        GreenfootImage image = new GreenfootImage(focused.getImage().getWidth() + 2 * BORDER, focused.getImage().getHeight() + 2 * BORDER);
+        Image image = new Image(focused.getImage().getWidth() + 2 * BORDER, focused.getImage().getHeight() + 2 * BORDER);
         image.setColor(theme.main());
         for(int i=0; i<BORDER - 1; i++) image.drawRect(i, i, image.getWidth() - 2 * i - 1, image.getHeight() - 2 * i - 1);
         image.setColor(theme.second());
@@ -212,7 +210,7 @@ public class UINavigator extends CoreActor {
 
 
     public void focus(Interactable button) {
-        focused = (button != null && button.getWorld() == world) ? button : null;
+        focused = (button != null && button.getMap().get() == map) ? button : null;
         updateImage();
     }
 

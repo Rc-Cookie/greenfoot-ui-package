@@ -1,6 +1,6 @@
 package com.github.rccookie.greenfoot.ui;
 
-import com.github.rccookie.common.geometry.Vector2D;
+import com.github.rccookie.geometry.Vector2D;
 
 class RelativeLocation {
     final Vector2D relative, offset;

@@ -1,51 +1,41 @@
 package com.github.rccookie.greenfoot.ui;
 
-import greenfoot.Actor;
-import greenfoot.MouseInfo;
-import greenfoot.World;
-import com.github.rccookie.common.util.ClassTag;
-import com.github.rccookie.greenfoot.event.Input;
+import com.github.rccookie.util.ClassTag;
+import com.github.rccookie.greenfoot.core.GameObject;
+import com.github.rccookie.greenfoot.core.MouseState;
 
 /**
  * A simple class that takes in an object to add to the world using the mouse.
  */
-public class ObjectAdder extends Actor {
+public class ObjectAdder extends GameObject {
 
     static {
         ClassTag.tag(ObjectAdder.class, "ui");
     }
     
 
-    private Actor object;
+    private GameObject object;
 
-    public ObjectAdder(Actor objectToAdd) {
+    public ObjectAdder(GameObject objectToAdd) {
         object = objectToAdd;
         setImage(object.getImage());
+        addOnAdd(() -> setLocation(MouseState.get().location));
     }
+
 
 
     @Override
-    protected void addedToWorld(World world) {
-        try{
-            MouseInfo mouse = Input.mouseInfo();
-            setLocation(mouse.getX(), mouse.getY());
-        }catch(NullPointerException e) {}
-    }
-
-
-    public void act() {
-        try{
-            MouseInfo mouse = Input.mouseInfo();
-            setLocation(mouse.getX(), mouse.getY());
-            if(mouse.getButton() == 1) {
-                getWorld().addObject(object, getX(), getY());
-                getWorld().removeObject(this);
-                object = null;
-            }
-            else if(mouse.getButton() == 3) {
-                getWorld().removeObject(this);
-                object = null;
-            }
-        }catch(NullPointerException e) {}
+    public void update() {
+        MouseState mouse = MouseState.get();
+        setLocation(mouse.location);
+        if(mouse.button == 1) {
+            getMap().ifPresent(m -> m.add(object, getLocation()));
+            remove();
+            object = null;
+        }
+        else if(mouse.button == 3) {
+            remove();
+            object = null;
+        }
     }
 }
